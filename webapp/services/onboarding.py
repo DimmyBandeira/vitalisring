@@ -99,6 +99,12 @@ def activate_synthetic_device(db: Session, *, device: Device, technician: User) 
         raise OnboardingError("Dispositivo fora do escopo deste técnico")
     if device.source != "synthetic":
         raise OnboardingError("Ativação sintética não permitida para dispositivo físico")
+    refresh_synthetic_device(db, device=device)
+
+
+def refresh_synthetic_device(db: Session, *, device: Device) -> None:
+    if device.source != "synthetic":
+        raise OnboardingError("Leitura sintética não permitida para dispositivo físico")
     now = utcnow_naive()
     db.add_all(
         [

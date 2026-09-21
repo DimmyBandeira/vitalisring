@@ -1,0 +1,24 @@
+{% extends "base_app.html" %}
+{% block content %}
+<section class="family-shell" aria-labelledby="family-title">
+  <div class="page-heading"><div><p class="app-eyebrow">Área da família</p><h1 id="family-title">Olá, {{ current_user.full_name }}</h1></div><a href="/logout">Sair</a></div>
+  {% if current_user.is_demo %}<p class="demo-label">Dados fictícios — demonstração</p>{% endif %}
+  {% if not dashboard %}
+  <div class="auth-card"><h2>Nenhuma pessoa vinculada</h2><p>Peça à equipe Vitalis para concluir o cadastro e o convite.</p></div>
+  {% else %}
+  <article class="daily-card daily-card--{{ dashboard.status_key }}">
+    <span class="vr-status vr-status--{{ dashboard.status_key }}"><span aria-hidden="true">{{ dashboard.status_icon }}</span>{{ dashboard.status_label }}</span>
+    <h2>{{ dashboard.patient.display_name }}</h2>
+    <p class="daily-message">{{ dashboard.status_message }}</p>
+    <p>Última comunicação: <strong>{{ dashboard.latest_relative }}</strong>{% if dashboard.latest_at %}, às {{ dashboard.latest_at.strftime('%H:%M') }}{% endif %}.</p>
+    {% if dashboard.device %}<p class="device-state"><span aria-hidden="true">{{ '●' if dashboard.device.status == 'active' else '○' }}</span> {{ 'Dispositivo ativo' if dashboard.device.status == 'active' else 'Aguardando dispositivo' }}</p>{% endif %}
+    <form method="post" action="/app/pacientes/{{ dashboard.patient.id }}/atualizar"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><button class="vr-btn vr-btn--primary" type="submit">Atualizar agora</button></form>
+  </article>
+  <div class="family-grid">
+    <section class="panel"><h2>Avisos recentes</h2>{% if dashboard.alerts %}<ol class="timeline">{% for alert in dashboard.alerts %}<li><span class="vr-status vr-status--{{ alert.level }}">{{ alert.level }}</span><span>Informação disponível no app.</span></li>{% endfor %}</ol>{% else %}<p>Nenhum aviso recente.</p>{% endif %}</section>
+    <section class="panel"><h2>Quem acompanha</h2><ul class="recipient-list">{% for recipient in dashboard.recipients %}<li><strong>{{ recipient.name }}</strong><span>{{ 'Autorizado' if recipient.authorized else 'Aguardando consentimento' }}</span></li>{% endfor %}</ul></section>
+  </div>
+  <details class="panel health-details"><summary>Ver detalhes das estimativas</summary><p>Estes números são estimativas automáticas e podem conter erros.</p><dl class="metrics-list"><div><dt>Frequência cardíaca</dt><dd>{% if dashboard.latest_values.heart_rate %}{{ dashboard.latest_values.heart_rate.value|round|int }} bpm{% else %}Sem leitura{% endif %}</dd></div><div><dt>Oxigenação estimada</dt><dd>{% if dashboard.latest_values.spo2 %}{{ dashboard.latest_values.spo2.value|round|int }}%{% else %}Sem leitura{% endif %}</dd></div><div><dt>Bateria</dt><dd>{% if dashboard.latest_values.battery %}{{ dashboard.latest_values.battery.value|round|int }}%{% else %}Sem leitura{% endif %}</dd></div></dl></details>
+  {% endif %}
+</section>
+{% endblock %}
