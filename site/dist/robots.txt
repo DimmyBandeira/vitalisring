@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://vitalisring.com.br/sitemap.xml

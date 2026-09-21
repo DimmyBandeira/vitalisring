@@ -1,0 +1,9 @@
+colmi-r02-client
+httpx
+python-dotenv
+fastapi
+uvicorn[standard]
+sqlalchemy
+streamlit
+pandas
+psutil

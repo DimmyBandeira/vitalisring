@@ -1,0 +1,95 @@
+# ============================================================================
+# Vitalis Ring — .htaccess (Apache / cPanel / Hostinger)  ·  v0.1
+# Salvar como  public_html/.htaccess  (com o ponto inicial).
+# Pressupõe site PRÉ-RENDERIZADO: cada rota é uma pasta com index.html
+# (ex.: /para-familias/index.html). URL inexistente => 404 REAL (não index.html).
+# ============================================================================
+
+# ---- Cloudflare na frente? Use SSL/TLS = "Full (strict)". Com "Flexible" o
+#      redirecionamento HTTPS abaixo entra em loop. -----------------------------
+
+DirectoryIndex index.html
+Options -Indexes -MultiViews
+ServerSignature Off
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+
+# 1) Forçar HTTPS (respeita proxy/CDN que envia X-Forwarded-Proto)
+RewriteCond %{HTTPS} !=on
+RewriteCond %{HTTP:X-Forwarded-Proto} !=https
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# 2) Domínio canônico: www -> apex (vitalisring.com.br)
+RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+RewriteRule ^ https://%1%{REQUEST_URI} [L,R=301]
+
+# 3) Remover "index.html" da URL e uniformizar barra final (rotas terminam em "/")
+RewriteCond %{THE_REQUEST} \s/+(.*?)index\.html[\s?] [NC]
+RewriteRule ^ /%1 [L,R=301,NE]
+</IfModule>
+
+# 4) 404 real, com a página do site
+ErrorDocument 404 /404.html
+
+# ----------------------------------------------------------------------------
+# SE (e somente se) o site NÃO for pré-renderizado (SPA renderizada no navegador),
+# descomente o bloco abaixo para o roteamento do React funcionar. ATENÇÃO: isso
+# faz URLs inexistentes devolverem 200 ("soft 404") e prejudica o SEO.
+# ----------------------------------------------------------------------------
+# <IfModule mod_rewrite.c>
+#   RewriteCond %{REQUEST_FILENAME} !-f
+#   RewriteCond %{REQUEST_FILENAME} !-d
+#   RewriteRule ^ /index.html [L]
+# </IfModule>
+
+# ---- Compressão --------------------------------------------------------------
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml application/xml application/json application/javascript text/javascript image/svg+xml
+</IfModule>
+
+# ---- Cache -------------------------------------------------------------------
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresDefault "access plus 1 hour"
+  ExpiresByType text/html "access plus 0 seconds"
+  ExpiresByType application/xml "access plus 1 hour"
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType text/javascript "access plus 1 year"
+  ExpiresByType font/woff2 "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 month"
+  ExpiresByType image/png "access plus 1 month"
+  ExpiresByType image/webp "access plus 1 month"
+  ExpiresByType image/avif "access plus 1 month"
+  ExpiresByType image/x-icon "access plus 1 month"
+</IfModule>
+# Arquivos em /assets/ têm hash no nome (imutáveis):
+<IfModule mod_headers.c>
+  <FilesMatch "\.(css|js|woff2)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>
+
+# ---- Cabeçalhos de segurança (sem CSP completa nesta versão) ---------------------
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  # HSTS: ATIVAR só depois de confirmar que HTTPS funciona em todo o domínio.
+  # Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+</IfModule>
+
+# ---- Tipos MIME --------------------------------------------------------------
+AddType font/woff2 .woff2
+AddType image/svg+xml .svg
+AddType application/manifest+json .webmanifest
+
+# ---- Proteger arquivos sensíveis ----------------------------------------------
+<FilesMatch "^\.(env|git|htaccess|htpasswd)|\.(md|py|yaml|yml|log)$">
+  Require all denied
+</FilesMatch>

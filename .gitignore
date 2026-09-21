@@ -1,0 +1,15 @@
+.env
+.env.*
+!.env.example
+
+venv/
+__pycache__/
+*.py[cod]
+
+collector.pid
+ring_status.json
+buffer.jsonl
+*.sqlite
+*.sqlite3
+
+.streamlit/
