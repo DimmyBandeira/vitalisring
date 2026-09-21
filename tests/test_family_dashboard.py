@@ -206,3 +206,20 @@ def test_customer_can_authorize_and_revoke_linked_recipient(client, family_conte
     assert consent.revoked_at is not None
     assert actions == ["alert_recipient_enabled", "alert_recipient_disabled"]
     db.close()
+
+
+def test_missing_readings_and_offline_physical_device_are_calm(client, family_context):
+    db = SessionLocal()
+    device = db.query(Device).filter(Device.id == family_context["device_pk"]).one()
+    db.query(Reading).filter(Reading.device_id == family_context["device_id"]).delete()
+    device.source = "physical"
+    db.commit()
+    db.close()
+
+    response = client.get("/app")
+
+    assert response.status_code == 200
+    assert "Para saber" in response.text
+    assert "ainda sem leitura" in response.text
+    assert "Coletor sem comunicação com o anel" in response.text
+    assert "Sem leitura" in response.text
