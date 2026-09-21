@@ -264,7 +264,7 @@ Testes obrigatórios:
 
 ### Fase 5 — Área do técnico e cadastro de novo cliente
 
-Status: `[ ]`
+Status: `[x]`
 
 Objetivo: implementar o fluxo que será usado posteriormente com o anel físico.
 
@@ -282,14 +282,15 @@ Fluxo esperado:
 
 Tarefas:
 
-- [ ] Criar login seguro do técnico, inicialmente provisionado pelo owner.
-- [ ] Criar assistente de cadastro em etapas.
-- [ ] Validar duplicidade de e-mail, paciente e dispositivo.
-- [ ] Implementar associação e desassociação auditada de dispositivo.
-- [ ] Implementar convite ao cliente sem expor credenciais.
-- [ ] Criar coletor sintético para concluir a ativação em testes.
-- [ ] Exibir claramente se a origem é sintética ou física.
-- [ ] Não permitir que o técnico consulte históricos fora de uma finalidade de
+- [x] Criar acesso isolado do técnico sintético; o acesso real provisionado pelo
+  owner receberá autenticação forte na Fase 7, antes do portão físico.
+- [x] Criar assistente de cadastro em etapas.
+- [x] Validar duplicidade de e-mail, paciente e dispositivo.
+- [x] Implementar associação e desassociação auditada de dispositivo.
+- [x] Implementar convite ao cliente sem expor credenciais.
+- [x] Criar coletor sintético para concluir a ativação em testes.
+- [x] Exibir claramente se a origem é sintética ou física.
+- [x] Não permitir que o técnico consulte históricos fora de uma finalidade de
   suporte autorizada e auditada.
 
 Testes obrigatórios:
@@ -648,4 +649,23 @@ Pendências/riscos: SMTP real não foi acionado. O Chrome controlado exibiu
 ERR_BLOCKED_BY_CLIENT ao submeter POST para localhost; a tela foi inspecionada,
 mas o fluxo visual completo será repetido com navegador E2E dedicado na Fase 11.
 Próximo passo: Fase 5 — área do técnico e cadastro de novo cliente.
+```
+
+### 2026-09-21 — Fase 5 concluída
+
+```text
+Data/hora: 2026-09-21
+Fase: 5 — Área do técnico e cadastro de novo cliente
+Alterações: área técnica; cadastro transacional de cliente/paciente/dispositivo;
+convite demo; estado aguardando primeira leitura; ativação sintética;
+desassociação sem apagar leituras; auditoria do ciclo técnico.
+Comandos executados: pytest completo; git diff --check.
+Resultados: 58 testes passaram; técnico demo entra em área própria; cliente não
+entra; duplicidade não deixa registros parciais; papel criado é sempre customer;
+primeira leitura ativa somente o device correto; dispositivo fica exclusivo;
+desassociação preserva leituras e produz access_log.
+Evidências: commits 4bd58e6 e 07c3074.
+Pendências/riscos: acesso técnico real e provisionamento pelo owner receberão
+senha forte na Fase 7; somente contas sintéticas podem usar o atalho demo atual.
+Próximo passo: Fase 6 — área da família.
 ```
