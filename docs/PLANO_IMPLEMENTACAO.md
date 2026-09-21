@@ -123,21 +123,21 @@ docs/
 
 ### Fase 0 — Preparação segura do ambiente
 
-Status: `[ ]`
+Status: `[x]`
 
 Objetivo: criar um ambiente reproduzível sem alterar dados existentes.
 
 Tarefas:
 
-- [ ] Criar a branch local `feature/area-logada` sem fazer push.
-- [ ] Instalar ou localizar Python 3.12.
-- [ ] Criar uma venv fora da pasta sincronizada pelo OneDrive.
-- [ ] Definir `VITALIS_PYTHON` ou mecanismo equivalente documentado.
-- [ ] Instalar as dependências atuais e verificar importações.
-- [ ] Criar configuração de testes com banco temporário.
-- [ ] Registrar versões de Python e dependências.
-- [ ] Verificar que nenhum segredo do `.env` é exibido ou versionado.
-- [ ] Executar testes de fumaça dos módulos existentes.
+- [x] Criar a branch local `feature/area-logada` sem fazer push.
+- [x] Instalar ou localizar Python 3.12.
+- [x] Criar uma venv fora da pasta sincronizada pelo OneDrive.
+- [x] Definir `VITALIS_PYTHON` ou mecanismo equivalente documentado.
+- [x] Instalar as dependências atuais e verificar importações.
+- [x] Criar configuração de testes com banco temporário.
+- [x] Registrar versões de Python e dependências.
+- [x] Verificar que nenhum segredo do `.env` é exibido ou versionado.
+- [x] Executar testes de fumaça dos módulos existentes.
 
 Aceite:
 
@@ -547,5 +547,24 @@ Pendências/riscos:
 Próximo passo:
 ```
 
-Nenhuma fase foi iniciada neste documento. A primeira execução deve começar pela
-Fase 0 e atualizar este diário.
+As entradas abaixo registram somente fases e frentes comprovadas por testes.
+
+### 2026-09-21 — Fase 0 concluída
+
+```text
+Data/hora: 2026-09-21
+Fase: 0 — Preparação segura do ambiente
+Alterações: branch de trabalho; política de commits; Python 3.12.7 em venv
+externa; documentação do ambiente; pytest isolado; build e auditor compatíveis
+com Windows/OneDrive.
+Comandos executados: pip install -r requirements.txt; pip check; compileall;
+dois builds consecutivos; audit_site.py; pytest.
+Resultados: pip check sem dependências quebradas; imports corretos; build
+idempotente; auditor com 0 erros e 4 avisos de conteúdo pendente; 2 testes
+passaram usando SQLite temporário, removido corretamente no encerramento.
+Evidências: commits 32204a6 e e0e4dd2; saída dos comandos nesta execução; banco
+temporário com prefixo vitalis-pytest-.
+Pendências/riscos: api.py usa o evento startup depreciado do FastAPI; será
+tratado quando a aplicação for estruturada, sem afetar os testes atuais.
+Próximo passo: Fase 1 — proteção da API antes de exposição pública.
+```
