@@ -1,0 +1,104 @@
+@import url("/design/tokens.css");
+
+* { box-sizing: border-box; }
+
+.app-body {
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+.app-header {
+  width: min(100% - 2rem, var(--vr-container));
+  min-height: 5.25rem;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vr-space-4);
+  border-bottom: 1px solid var(--vr-line);
+}
+
+.app-brand {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--vr-target);
+}
+
+.app-brand img { width: clamp(10rem, 35vw, 13.75rem); }
+
+.app-back {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--vr-target);
+  padding: 0 var(--vr-space-3);
+  font-weight: 700;
+}
+
+.app-main {
+  width: min(100% - 2rem, 38rem);
+  margin: 0 auto;
+  padding: var(--vr-space-7) 0;
+  display: grid;
+  align-items: center;
+}
+
+.auth-card {
+  padding: clamp(1.5rem, 5vw, 3rem);
+  border: 1px solid var(--vr-line);
+  border-radius: var(--vr-radius-lg);
+  background: var(--vr-white);
+  box-shadow: var(--vr-shadow);
+}
+
+.auth-card > :last-child { margin-bottom: 0; }
+
+.app-eyebrow {
+  margin: 0 0 var(--vr-space-3);
+  color: var(--vr-bronze-700);
+  font-size: var(--vr-fs-sm);
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.app-form {
+  display: grid;
+  gap: var(--vr-space-3);
+  margin: var(--vr-space-6) 0 var(--vr-space-4);
+}
+
+.app-form label { font-weight: 700; }
+
+.app-form input {
+  width: 100%;
+  min-height: var(--vr-target);
+  padding: .75rem 1rem;
+  border: 2px solid var(--vr-line);
+  border-radius: var(--vr-radius-sm);
+  background: var(--vr-ivory);
+  color: var(--vr-ink);
+  font: inherit;
+}
+
+.app-form :disabled { cursor: not-allowed; opacity: .7; }
+.app-help { color: var(--vr-ink-soft); font-size: var(--vr-fs-sm); }
+
+.app-disclaimer {
+  padding: var(--vr-space-4);
+  border-top: 1px solid var(--vr-line);
+  background: var(--vr-sand);
+  text-align: center;
+}
+
+.app-disclaimer p {
+  width: min(100%, var(--vr-container-narrow));
+  margin: 0 auto;
+  font-size: var(--vr-fs-sm);
+}
+
+@media (max-width: 35rem) {
+  .app-header { align-items: flex-start; padding: var(--vr-space-3) 0; }
+  .app-main { padding: var(--vr-space-5) 0; }
+  .auth-card { border-radius: var(--vr-radius); }
+}

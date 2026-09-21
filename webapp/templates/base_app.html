@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#FCF8EE">
+  <title>{{ page_title }}</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/app.css">
+  <script src="/static/vendor/htmx.min.js" defer></script>
+</head>
+<body class="app-body">
+  <a class="vr-skip" href="#conteudo">Pular para o conteúdo</a>
+  <header class="app-header">
+    <a class="app-brand" href="/" aria-label="Vitalis Ring — início">
+      <img src="/design/logo/logo-horizontal-escuro.svg" alt="Vitalis Ring" width="220" height="58">
+    </a>
+    <a class="app-back" href="/">Voltar ao site</a>
+  </header>
+  <main class="app-main" id="conteudo">
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="app-disclaimer">
+    <p><strong>Estimativas automáticas. Pode conter erros. Não substitui avaliação médica. Em emergência, ligue 192 (SAMU).</strong></p>
+  </footer>
+</body>
+</html>

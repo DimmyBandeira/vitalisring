@@ -1,0 +1,14 @@
+{% extends "base_app.html" %}
+{% block content %}
+<section class="auth-card" aria-labelledby="login-title">
+  <p class="app-eyebrow">Área segura</p>
+  <h1 id="login-title">Entre no Vitalis</h1>
+  <p>Use o e-mail cadastrado para acessar suas informações. O envio do link seguro será habilitado na próxima etapa.</p>
+  <form class="app-form" aria-describedby="login-help">
+    <label for="email">E-mail</label>
+    <input id="email" name="email" type="email" autocomplete="email" placeholder="voce@exemplo.com" disabled>
+    <button class="vr-btn vr-btn--primary" type="button" disabled>Receber link de acesso</button>
+  </form>
+  <p class="app-help" id="login-help">Nenhum dado é solicitado enquanto o login ainda está em preparação.</p>
+</section>
+{% endblock %}

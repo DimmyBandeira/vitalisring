@@ -12,6 +12,7 @@ from typing import Literal
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, Header, HTTPException, Query
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 load_dotenv()
@@ -19,6 +20,7 @@ load_dotenv()
 from models import Reading, SessionLocal, init_db
 from webapp.security.config import env_flag, validate_public_exposure
 from webapp.security.headers import install_security_headers
+from webapp.routes.pages import router as web_pages_router
 
 API_KEY = os.environ.get("API_KEY", "")
 PUBLIC_EXPOSURE = env_flag("PUBLIC_EXPOSURE")
@@ -125,3 +127,11 @@ def get_history(
 @app.get("/health")
 def health():
     return {"status": "ok"}
+
+
+# Rotas e montagens HTML ficam por último para que o site na raiz nunca capture
+# endpoints da API nem páginas da aplicação.
+app.include_router(web_pages_router)
+app.mount("/static", StaticFiles(directory="static"), name="app-static")
+app.mount("/design", StaticFiles(directory="site/design"), name="design-system")
+app.mount("/", StaticFiles(directory="site/dist", html=True), name="public-site")

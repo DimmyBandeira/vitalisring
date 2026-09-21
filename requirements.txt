@@ -7,3 +7,4 @@ sqlalchemy
 streamlit
 pandas
 psutil
+jinja2
