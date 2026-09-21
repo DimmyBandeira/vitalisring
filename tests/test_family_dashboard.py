@@ -7,7 +7,7 @@ from fastapi.testclient import TestClient
 
 import api
 from models import Reading, SessionLocal, init_db, utcnow_naive
-from webapp.models_app import CareLink, Device, Patient, RefreshRequest, User
+from webapp.models_app import AccessLog, Alert, CareLink, Consent, Device, Patient, RefreshRequest, User
 from webapp.security.sessions import COOKIE_NAME, CSRF_COOKIE_NAME, create_session
 from webapp.services.family_dashboard import local_datetime
 
@@ -27,7 +27,13 @@ def family_context():
     )
     patient = Patient(display_name="Maria Teste", is_demo=True)
     other = Patient(display_name="Paciente sem vínculo", is_demo=True)
-    db.add_all([user, patient, other])
+    doctor = User(
+        email=f"doctor-{suffix}@example.test",
+        full_name="Dra. Acompanhante",
+        role="doctor",
+        is_demo=True,
+    )
+    db.add_all([user, patient, other, doctor])
     db.flush()
     device = Device(
         device_id=f"demo-family-{suffix}",
@@ -37,6 +43,7 @@ def family_context():
     )
     db.add(device)
     db.add(CareLink(user_id=user.id, patient_id=patient.id, link_type="guardian"))
+    db.add(CareLink(user_id=doctor.id, patient_id=patient.id, link_type="doctor"))
     now = utcnow_naive()
     db.add_all(
         [
@@ -51,6 +58,8 @@ def family_context():
         "patient_id": patient.id,
         "other_id": other.id,
         "device_id": device.device_id,
+        "device_pk": device.id,
+        "recipient_id": doctor.id,
         "token": session.token,
         "csrf": session.csrf_token,
     }
@@ -75,7 +84,10 @@ def test_family_dashboard_is_calm_labeled_and_details_are_collapsed(client):
     assert "Última comunicação" in response.text
     assert "Ver detalhes das estimativas" in response.text
     assert "Frequência cardíaca" in response.text
-    assert "Quem acompanha" in response.text
+    assert "Quem recebe avisos" in response.text
+    assert "Dra. Acompanhante" in response.text
+    assert "Autorizar" in response.text
+    assert "Simulador da demonstração ativo" in response.text
 
 
 def test_sao_paulo_conversion_keeps_database_utc_naive():
@@ -116,3 +128,81 @@ def test_refresh_rejects_patient_id_tampering(client, family_context):
     )
 
     assert response.status_code == 403
+
+
+@pytest.mark.parametrize(
+    ("level", "label"),
+    [
+        ("info", "Para saber"),
+        ("warn", "Vale observar"),
+        ("alert", "Importante"),
+        ("critical", "Precisa de você agora"),
+    ],
+)
+def test_open_alert_drives_the_five_level_card(client, family_context, level, label):
+    db = SessionLocal()
+    db.add(
+        Alert(
+            patient_id=family_context["patient_id"],
+            device_id=family_context["device_pk"],
+            level=level,
+            rule_key="browser-test",
+            is_demo=True,
+        )
+    )
+    db.commit()
+    db.close()
+
+    response = client.get("/app")
+
+    assert response.status_code == 200
+    assert label in response.text
+
+
+def test_customer_can_authorize_and_revoke_linked_recipient(client, family_context):
+    url = (
+        f"/app/pacientes/{family_context['patient_id']}"
+        f"/destinatarios/{family_context['recipient_id']}"
+    )
+    authorized = client.post(
+        url,
+        data={"csrf_token": family_context["csrf"], "enabled": "yes"},
+        headers={"Origin": "http://testserver"},
+        follow_redirects=False,
+    )
+    assert authorized.status_code == 303
+
+    db = SessionLocal()
+    consent = (
+        db.query(Consent)
+        .filter(Consent.grantee_user_id == family_context["recipient_id"])
+        .one()
+    )
+    assert consent.status == "active"
+    assert consent.revoked_at is None
+    db.close()
+
+    revoked = client.post(
+        url,
+        data={"csrf_token": family_context["csrf"], "enabled": "no"},
+        headers={"Origin": "http://testserver"},
+        follow_redirects=False,
+    )
+    assert revoked.status_code == 303
+
+    db = SessionLocal()
+    consent = (
+        db.query(Consent)
+        .filter(Consent.grantee_user_id == family_context["recipient_id"])
+        .one()
+    )
+    actions = [
+        item.action
+        for item in db.query(AccessLog)
+        .filter(AccessLog.patient_id == family_context["patient_id"])
+        .all()
+    ]
+    assert consent.status == "revoked"
+    assert consent.revoked_at is not None
+    assert actions == ["alert_recipient_enabled", "alert_recipient_disabled"]
+    db.close()

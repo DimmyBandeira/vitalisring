@@ -14,6 +14,17 @@ from webapp.models_app import Alert, CareLink, Consent, Device, Patient, User
 
 SAO_PAULO = ZoneInfo("America/Sao_Paulo")
 RING_STATUS_PATH = Path("ring_status.json")
+STATUS_PRESENTATION = {
+    "ok": ("Tudo em ordem", "✓", "Nenhum aviso novo no momento."),
+    "info": ("Para saber", "i", "Há uma informação nova para você."),
+    "warn": ("Vale observar", "!", "Vale acompanhar esta informação no app."),
+    "alert": ("Importante", "!", "Há uma informação importante para você."),
+    "critical": (
+        "Precisa de você agora",
+        "!",
+        "Abra os detalhes agora. Em emergência, ligue 192.",
+    ),
+}
 
 
 @dataclass(frozen=True)
@@ -94,13 +105,6 @@ def load_family_dashboard(db: Session, user: User) -> DashboardState | None:
                 if latest_at is None or reading.timestamp > latest_at:
                     latest_at = reading.timestamp
 
-    if latest_at and latest_at >= now - timedelta(minutes=15):
-        status_key, status_label, status_icon = "ok", "Tudo em ordem", "✓"
-        status_message = "O dispositivo se comunicou recentemente."
-    else:
-        status_key, status_label, status_icon = "info", "Para saber", "i"
-        status_message = "Ainda não recebemos uma leitura recente do dispositivo."
-
     alerts = (
         db.query(Alert)
         .filter(Alert.patient_id == patient.id)
@@ -108,6 +112,21 @@ def load_family_dashboard(db: Session, user: User) -> DashboardState | None:
         .limit(10)
         .all()
     )
+    open_alert = next(
+        (alert for alert in alerts if alert.status == "open" and alert.level in STATUS_PRESENTATION),
+        None,
+    )
+    if open_alert:
+        status_key = open_alert.level
+        status_label, status_icon, status_message = STATUS_PRESENTATION[status_key]
+    elif latest_at and latest_at >= now - timedelta(minutes=15):
+        status_key = "ok"
+        status_label, status_icon, _message = STATUS_PRESENTATION[status_key]
+        status_message = "O dispositivo se comunicou recentemente."
+    else:
+        status_key = "info"
+        status_label, status_icon, _message = STATUS_PRESENTATION[status_key]
+        status_message = "Ainda não recebemos uma leitura recente do dispositivo."
     recipient_links = (
         db.query(CareLink)
         .filter(CareLink.patient_id == patient.id, CareLink.is_active.is_(True))
@@ -130,6 +149,7 @@ def load_family_dashboard(db: Session, user: User) -> DashboardState | None:
         )
         recipients.append(
             {
+                "id": recipient.id,
                 "name": recipient.full_name,
                 "relationship": recipient_link.link_type,
                 "authorized": recipient.role == "customer" or consent is not None,

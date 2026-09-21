@@ -8,7 +8,8 @@ from sqlalchemy.orm import Session
 
 from models import utcnow_naive
 from webapp.routes.common import templates
-from webapp.models_app import Device, RefreshRequest
+from webapp.models_app import CareLink, Consent, Device, RefreshRequest, User
+from webapp.security.audit import record_action
 from webapp.security.authorization import authorize_patient
 from webapp.security.csrf import validate_session_csrf
 from webapp.security.sessions import (
@@ -96,6 +97,69 @@ def refresh_patient(
         pending.status = "completed"
         pending.completed_at = utcnow_naive()
         db.commit()
+    return RedirectResponse("/app", status_code=303)
+
+
+@router.post("/app/pacientes/{patient_id}/destinatarios/{recipient_id}")
+def update_alert_recipient(
+    patient_id: str,
+    recipient_id: str,
+    request: Request,
+    enabled: str = Form("no"),
+    csrf_token: str = Form(""),
+    db: Session = Depends(get_db),
+):
+    session, user = authenticated_context(request, db)
+    if not validate_session_csrf(request, csrf_token, session.csrf_hash):
+        raise HTTPException(status_code=403, detail="Requisição inválida")
+    patient = authorize_patient(db, user, patient_id)
+    if user.role not in {"customer", "owner"}:
+        raise HTTPException(status_code=403, detail="Acesso não autorizado")
+    recipient = db.get(User, recipient_id)
+    recipient_link = (
+        db.query(CareLink)
+        .filter(
+            CareLink.user_id == recipient_id,
+            CareLink.patient_id == patient.id,
+            CareLink.is_active.is_(True),
+        )
+        .first()
+    )
+    if recipient is None or recipient_link is None or recipient.id == user.id:
+        raise HTTPException(status_code=403, detail="Destinatário inválido")
+    consent = (
+        db.query(Consent)
+        .filter(
+            Consent.patient_id == patient.id,
+            Consent.grantor_user_id == user.id,
+            Consent.grantee_user_id == recipient.id,
+        )
+        .order_by(Consent.granted_at.desc())
+        .first()
+    )
+    now = utcnow_naive()
+    is_enabled = enabled == "yes"
+    if consent is None:
+        consent = Consent(
+            patient_id=patient.id,
+            grantor_user_id=user.id,
+            grantee_user_id=recipient.id,
+        )
+        db.add(consent)
+    consent.status = "active" if is_enabled else "revoked"
+    consent.revoked_at = None if is_enabled else now
+    if is_enabled:
+        consent.granted_at = now
+    db.commit()
+    record_action(
+        db,
+        user=user,
+        patient_id=patient.id,
+        action="alert_recipient_enabled" if is_enabled else "alert_recipient_disabled",
+        purpose="manage_alert_recipients",
+        request_id=getattr(request.state, "request_id", None),
+        ip=request.client.host if request.client else None,
+    )
     return RedirectResponse("/app", status_code=303)
 
 

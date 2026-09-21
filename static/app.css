@@ -102,12 +102,13 @@
 .summary-list dt { font-weight: 700; }.summary-list dd { margin: 0; }
 .family-shell { width: min(100%, var(--vr-container)); }
 .daily-card { padding: clamp(1.5rem, 5vw, 3rem); border: 2px solid var(--vr-line); border-radius: var(--vr-radius-lg); box-shadow: var(--vr-shadow); }
-.daily-card--ok { border-color: var(--vr-ok); background: var(--vr-ok-bg); }.daily-card--info { border-color: var(--vr-info); background: var(--vr-info-bg); }
+.daily-card--ok { border-color: var(--vr-ok); background: var(--vr-ok-bg); }.daily-card--info { border-color: var(--vr-info); background: var(--vr-info-bg); }.daily-card--warn { border-color: var(--vr-warn); background: var(--vr-warn-bg); }.daily-card--alert { border-color: var(--vr-alert); background: var(--vr-alert-bg); }.daily-card--critical { border-color: var(--vr-critical); background: var(--vr-critical-bg); }
 .daily-message { font-size: var(--vr-fs-lg); }.device-state { font-weight: 700; }
 .family-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--vr-space-5); margin: var(--vr-space-5) 0; }
 .panel { padding: var(--vr-space-5); border: 1px solid var(--vr-line); border-radius: var(--vr-radius); background: var(--vr-white); }
 .panel h2 { font-size: var(--vr-fs-h3); }.timeline, .recipient-list { margin: 0; padding: 0; list-style: none; display: grid; gap: var(--vr-space-3); }
 .timeline li, .recipient-list li { display: flex; justify-content: space-between; gap: var(--vr-space-3); padding-bottom: var(--vr-space-2); border-bottom: 1px solid var(--vr-line); }
+.recipient-list small { display: block; color: var(--vr-ink-muted); }.recipient-list form { margin: 0; }.text-button { min-height: var(--vr-target); border: 0; background: transparent; color: var(--vr-bronze-700); font: inherit; font-weight: 700; text-decoration: underline; cursor: pointer; }.collector-state { color: var(--vr-ink-muted); }
 .health-details summary { min-height: var(--vr-target); cursor: pointer; font-weight: 700; }
 .metrics-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--vr-space-4); }.metrics-list div { padding: var(--vr-space-4); background: var(--vr-sand); border-radius: var(--vr-radius-sm); }.metrics-list dd { margin: var(--vr-space-2) 0 0; font-size: var(--vr-fs-lg); font-weight: 700; }
 
