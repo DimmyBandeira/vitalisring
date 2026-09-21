@@ -1,0 +1,22 @@
+{% extends "base_app.html" %}
+{% block content %}
+<section class="auth-card auth-card--wide" aria-labelledby="new-title">
+  <p class="app-eyebrow">Área técnica · nova implantação</p>
+  <h1 id="new-title">Cadastrar novo cliente</h1>
+  <p>Este assistente cria o responsável, a pessoa monitorada e o registro do anel em uma única operação.</p>
+  {% if error %}<p class="form-error" role="alert">{{ error }}</p>{% endif %}
+  <form class="app-form form-grid" method="post" action="/app/tecnico/novo">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <h2>1. Responsável</h2>
+    <label for="customer-name">Nome</label><input id="customer-name" name="customer_name" required>
+    <label for="customer-email">E-mail</label><input id="customer-email" name="customer_email" type="email" required>
+    <h2>2. Pessoa monitorada</h2>
+    <label for="patient-name">Nome de exibição</label><input id="patient-name" name="patient_name" required>
+    <h2>3. Dispositivo</h2>
+    <label for="source">Origem</label><select id="source" name="source"><option value="synthetic">Sintético — demonstração</option><option value="physical">Físico — Colmi R10</option></select>
+    <label for="device-id">Identificador</label><input id="device-id" name="device_id" value="demo-" required>
+    <label for="serial">Número de série, se disponível</label><input id="serial" name="serial_number">
+    <button class="vr-btn vr-btn--primary" type="submit">Criar implantação</button>
+  </form>
+</section>
+{% endblock %}

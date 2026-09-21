@@ -18,6 +18,7 @@ from webapp.services.mailer import LoginDelivery, Mailer
 TOKEN_TTL = timedelta(minutes=15)
 REQUEST_WINDOW = timedelta(minutes=15)
 REQUEST_LIMIT = 5
+IP_REQUEST_LIMIT = 20
 CODE_ATTEMPT_LIMIT = 5
 EMAIL_PATTERN = re.compile(r"^[^\s@]+@[^\s@]+\.[^\s@]+$")
 
@@ -52,7 +53,7 @@ def request_login(
         scope="login-ip",
         identifier=ip,
         secret=secret,
-        limit=REQUEST_LIMIT,
+        limit=IP_REQUEST_LIMIT,
         window=REQUEST_WINDOW,
     )
     allowed_email = consume(
@@ -66,7 +67,10 @@ def request_login(
     if not valid_email(normalized) or not (allowed_ip and allowed_email):
         return None
     user = db.query(User).filter(User.email == normalized, User.is_active.is_(True)).first()
-    if user is None or user.role != "customer":
+    if user is None or not (
+        user.role == "customer"
+        or (demo_mode and user.is_demo and user.role == "technician")
+    ):
         return None
 
     raw_token = new_token()

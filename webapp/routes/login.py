@@ -38,7 +38,10 @@ def _login_form_response(request: Request, template_name: str, **context):
 
 def _complete_login(db: Session, user):
     new_session = create_session(db, user)
-    target = "/app" if user.consented_at else "/app/consentimento"
+    if user.role == "technician":
+        target = "/app/tecnico"
+    else:
+        target = "/app" if user.consented_at else "/app/consentimento"
     response = RedirectResponse(target, status_code=303)
     set_session_cookies(response, new_session)
     return response

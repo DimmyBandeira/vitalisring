@@ -1,0 +1,15 @@
+{% extends "base_app.html" %}
+{% block content %}
+<section class="auth-card auth-card--wide" aria-labelledby="created-title">
+  <span class="vr-status vr-status--ok"><span aria-hidden="true">✓</span> Cadastro concluído</span>
+  <h1 id="created-title">Implantação criada</h1>
+  {% if device.source == "synthetic" %}<p class="demo-label">Dados fictícios — demonstração</p>{% endif %}
+  <dl class="summary-list"><div><dt>Cliente</dt><dd>{{ customer.full_name }}</dd></div><div><dt>Pessoa monitorada</dt><dd>{{ patient.display_name }}</dd></div><div><dt>Dispositivo</dt><dd>{{ device.device_id }}</dd></div><div><dt>Estado</dt><dd>Aguardando primeira leitura</dd></div></dl>
+  {% if demo_preview %}<aside class="demo-card"><p class="app-eyebrow">Convite de demonstração</p><a href="{{ demo_preview.magic_link }}">Abrir acesso do cliente</a><p>Código: <strong class="demo-code">{{ demo_preview.code }}</strong></p></aside>{% endif %}
+  <form method="post" action="/app/tecnico/dispositivos/{{ device.id }}/ativar-demo">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <button class="vr-btn vr-btn--primary" type="submit"{% if device.source != "synthetic" %} disabled{% endif %}>Simular primeira leitura</button>
+  </form>
+  <p><a href="/app/tecnico/dispositivos/{{ device.id }}">Acompanhar ativação</a></p>
+</section>
+{% endblock %}

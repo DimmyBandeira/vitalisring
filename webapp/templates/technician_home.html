@@ -1,0 +1,19 @@
+{% extends "base_app.html" %}
+{% block content %}
+<section class="tech-shell" aria-labelledby="tech-title">
+  <div class="page-heading">
+    <div><p class="app-eyebrow">Área técnica</p><h1 id="tech-title">Implantações</h1></div>
+    <a class="vr-btn vr-btn--primary" href="/app/tecnico/novo">Cadastrar cliente</a>
+  </div>
+  {% if devices %}
+  <div class="device-list">
+    {% for device in devices %}
+    <a class="device-row" href="/app/tecnico/dispositivos/{{ device.id }}">
+      <span><strong>{{ device.device_id }}</strong><small>{{ "Dados fictícios — demonstração" if device.source == "synthetic" else "Dispositivo físico" }}</small></span>
+      <span class="vr-status {{ 'vr-status--ok' if device.status == 'active' else 'vr-status--info' }}"><span aria-hidden="true">{{ '✓' if device.status == 'active' else 'i' }}</span>{{ "Ativo" if device.status == "active" else "Aguardando primeira leitura" }}</span>
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}<p class="empty-state">Nenhuma implantação cadastrada por você.</p>{% endif %}
+</section>
+{% endblock %}

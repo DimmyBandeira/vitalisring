@@ -1,0 +1,12 @@
+{% extends "base_app.html" %}
+{% block content %}
+<section class="auth-card" aria-labelledby="device-title">
+  <p class="app-eyebrow">Ativação do dispositivo</p>
+  <h1 id="device-title">{{ device.device_id }}</h1>
+  {% if device.source == "synthetic" %}<p class="demo-label">Dados fictícios — demonstração</p>{% endif %}
+  {% if device.status == "active" %}<p class="vr-status vr-status--ok"><span aria-hidden="true">✓</span> Dispositivo ativo</p><p>A primeira comunicação foi recebida com sucesso.</p>
+  {% else %}<p class="vr-status vr-status--info"><span aria-hidden="true">i</span> Aguardando primeira leitura</p><p>O registro no sistema não representa uma conexão Bluetooth. O coletor próximo ao anel deve enviar a primeira leitura.</p>{% endif %}
+  {% if device.source == "synthetic" and device.status != "active" %}<form method="post" action="/app/tecnico/dispositivos/{{ device.id }}/ativar-demo"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><button class="vr-btn vr-btn--primary" type="submit">Simular primeira leitura</button></form>{% endif %}
+  <p><a href="/app/tecnico">Voltar às implantações</a></p>
+</section>
+{% endblock %}
