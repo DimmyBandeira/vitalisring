@@ -303,20 +303,20 @@ Testes obrigatórios:
 
 ### Fase 6 — Área da família
 
-Status: `[ ]`
+Status: `[x]`
 
 Objetivo: entregar uma experiência simples e calma para o cliente.
 
 Tarefas:
 
-- [ ] Cartão principal do dia com a escala de cinco níveis.
-- [ ] Horário relativo da última leitura.
-- [ ] Estado do dispositivo e da última comunicação do coletor.
-- [ ] Linha do tempo de avisos demonstrativos.
-- [ ] “Atualizar agora” com acompanhamento do pedido.
-- [ ] Detalhes numéricos somente em uma seção explícita.
-- [ ] Gestão de pessoas autorizadas e consentimentos.
-- [ ] Mobile-first, texto base de 18 px e modo de movimento reduzido.
+- [x] Cartão principal do dia com a escala de cinco níveis.
+- [x] Horário relativo da última leitura.
+- [x] Estado do dispositivo e da última comunicação do coletor.
+- [x] Linha do tempo de avisos demonstrativos.
+- [x] “Atualizar agora” com acompanhamento do pedido.
+- [x] Detalhes numéricos somente em uma seção explícita.
+- [x] Gestão de pessoas autorizadas e consentimentos.
+- [x] Mobile-first, texto base de 18 px e modo de movimento reduzido.
 
 Testes obrigatórios:
 
@@ -668,4 +668,22 @@ Evidências: commits 4bd58e6 e 07c3074.
 Pendências/riscos: acesso técnico real e provisionamento pelo owner receberão
 senha forte na Fase 7; somente contas sintéticas podem usar o atalho demo atual.
 Próximo passo: Fase 6 — área da família.
+```
+
+### 2026-09-21 — Fase 6 concluída
+
+```text
+Data/hora: 2026-09-21
+Fase: 6 — Área da família
+Alterações: painel familiar mobile-first; escala visual de cinco níveis;
+datas locais; detalhes de estimativas recolhidos; estado do dispositivo/coletor;
+pedidos de atualização; destinatários com consentimento e auditoria.
+Comandos executados: pytest completo; git diff --check; QA em Chrome 390x844.
+Resultados: 68 testes passaram; sem overflow horizontal; texto-base de 18 px;
+detalhes fechados por padrão; IDOR bloqueado; estados sem dados e offline claros.
+Evidências: commits 142837b, e6a7b82 e 70b8c1a; docs/FAMILIA.md.
+Pendências/riscos: regras de avaliação entram na Fase 9; coletor físico e
+polling HTMX entram na Fase 8. POST no Chrome local segue bloqueado pelo cliente,
+mas foi coberto pelo teste ASGI.
+Próximo passo: Fase 7 — login forte e console médico.
 ```
