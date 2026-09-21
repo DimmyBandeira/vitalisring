@@ -20,8 +20,9 @@ load_dotenv()
 from models import Reading, SessionLocal, init_db
 from webapp.security.config import env_flag, validate_demo_mode, validate_public_exposure
 from webapp.security.headers import install_security_headers
-from webapp.routes.pages import router as web_pages_router
 from webapp.routes.api_app import router as app_api_router
+from webapp.routes.cliente import router as client_router
+from webapp.routes.login import router as login_router
 
 API_KEY = os.environ.get("API_KEY", "")
 PUBLIC_EXPOSURE = env_flag("PUBLIC_EXPOSURE")
@@ -134,7 +135,8 @@ def health():
 
 # Rotas e montagens HTML ficam por último para que o site na raiz nunca capture
 # endpoints da API nem páginas da aplicação.
-app.include_router(web_pages_router)
+app.include_router(login_router)
+app.include_router(client_router)
 app.include_router(app_api_router)
 app.mount("/static", StaticFiles(directory="static"), name="app-static")
 app.mount("/design", StaticFiles(directory="site/design"), name="design-system")

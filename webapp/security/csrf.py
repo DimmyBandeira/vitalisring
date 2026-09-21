@@ -1,8 +1,15 @@
 """Proteção CSRF por token de sessão e comparação exata de origem."""
 
+import os
 from urllib.parse import urlsplit
 
-from webapp.security.crypto import constant_time_equal, token_hash
+from fastapi import Request
+
+from webapp.security.crypto import constant_time_equal, new_token, token_hash
+from webapp.security.sessions import session_secret
+
+
+LOGIN_CSRF_COOKIE = "vr_login_csrf"
 
 
 def normalized_origin(value: str) -> str:
@@ -31,3 +38,33 @@ def validate_csrf(
         return False
     supplied_hash = token_hash(supplied_token, secret)
     return constant_time_equal(supplied_hash, expected_hash)
+
+
+def issue_login_csrf() -> tuple[str, str]:
+    raw_token = new_token()
+    return raw_token, token_hash(raw_token, session_secret())
+
+
+def validate_login_csrf(request: Request, supplied_token: str | None) -> bool:
+    expected_hash = request.cookies.get(LOGIN_CSRF_COOKIE, "")
+    return bool(expected_hash) and validate_csrf(
+        supplied_token=supplied_token,
+        expected_hash=expected_hash,
+        origin=request.headers.get("Origin"),
+        allowed_origins={os.environ.get("PUBLIC_BASE_URL", "")},
+        secret=session_secret(),
+    )
+
+
+def validate_session_csrf(
+    request: Request,
+    supplied_token: str | None,
+    expected_hash: str,
+) -> bool:
+    return validate_csrf(
+        supplied_token=supplied_token or request.headers.get("X-CSRF-Token"),
+        expected_hash=expected_hash,
+        origin=request.headers.get("Origin"),
+        allowed_origins={os.environ.get("PUBLIC_BASE_URL", "")},
+        secret=session_secret(),
+    )

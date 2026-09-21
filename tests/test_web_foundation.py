@@ -42,8 +42,13 @@ def test_public_site_and_login_share_the_same_origin(client):
 
 
 def test_app_routes_are_not_captured_by_public_site_mount(client):
-    assert client.get("/app").status_code == 200
-    assert client.get("/logout").status_code == 200
+    app_response = client.get("/app", follow_redirects=False)
+    logout_response = client.get("/logout", follow_redirects=False)
+
+    assert app_response.status_code == 303
+    assert app_response.headers["location"] == "/login"
+    assert logout_response.status_code == 303
+    assert logout_response.headers["location"] == "/login"
     assert client.get("/health").json() == {"status": "ok"}
 
 

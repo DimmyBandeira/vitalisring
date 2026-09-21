@@ -1,9 +1,10 @@
 {% extends "base_app.html" %}
 {% block content %}
 <section class="auth-card" aria-labelledby="app-title">
-  <span class="vr-status vr-status--info"><span aria-hidden="true">i</span> Em preparação</span>
-  <h1 id="app-title">Área Vitalis</h1>
-  <p>A estrutura segura da área logada está pronta. Autenticação, consentimento e os painéis serão liberados nas próximas etapas.</p>
-  <a class="vr-btn vr-btn--secondary" href="/login">Ir para o login</a>
+  <span class="vr-status vr-status--info"><span aria-hidden="true">i</span> Área segura</span>
+  <h1 id="app-title">Olá, {{ current_user.full_name }}</h1>
+  <p>Seu acesso está ativo. O painel da família será construído na próxima fase funcional.</p>
+  {% if current_user.is_demo %}<p class="demo-label">Dados fictícios — demonstração</p>{% endif %}
+  <a class="vr-btn vr-btn--secondary" href="/logout">Sair com segurança</a>
 </section>
 {% endblock %}

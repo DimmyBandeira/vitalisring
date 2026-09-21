@@ -2,8 +2,12 @@
 {% block content %}
 <section class="auth-card" aria-labelledby="logout-title">
   <p class="app-eyebrow">Área segura</p>
-  <h1 id="logout-title">Sessão encerrada</h1>
-  <p>Quando o login estiver habilitado, esta página confirmará o encerramento seguro da sua sessão.</p>
-  <a class="vr-btn vr-btn--primary" href="/login">Voltar ao login</a>
+  <h1 id="logout-title">Deseja sair?</h1>
+  <p>Ao sair, esta sessão será revogada neste aparelho.</p>
+  <form class="app-form" method="post" action="/logout">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <button class="vr-btn vr-btn--primary" type="submit">Encerrar sessão</button>
+  </form>
+  <a href="/app">Voltar para a área Vitalis</a>
 </section>
 {% endblock %}

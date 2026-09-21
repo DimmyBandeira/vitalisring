@@ -1,0 +1,18 @@
+{% extends "base_app.html" %}
+{% block content %}
+<section class="auth-card" aria-labelledby="code-title">
+  <p class="app-eyebrow">Código de acesso</p>
+  <h1 id="code-title">Digite os seis dígitos</h1>
+  <p>Use o mesmo e-mail que recebeu o código. Ele expira em 15 minutos.</p>
+  {% if error %}<p class="form-error" role="alert">{{ error }}</p>{% endif %}
+  <form class="app-form" method="post" action="/login/codigo">
+    <input type="hidden" name="csrf_token" value="{{ login_csrf }}">
+    <label for="email">E-mail</label>
+    <input id="email" name="email" type="email" autocomplete="email" required>
+    <label for="code">Código</label>
+    <input id="code" name="code" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" required>
+    <button class="vr-btn vr-btn--primary" type="submit">Entrar</button>
+  </form>
+  <p><a href="/login">Voltar e solicitar outro link</a></p>
+</section>
+{% endblock %}

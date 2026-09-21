@@ -83,6 +83,12 @@
 
 .app-form :disabled { cursor: not-allowed; opacity: .7; }
 .app-help { color: var(--vr-ink-soft); font-size: var(--vr-fs-sm); }
+.form-error { padding: var(--vr-space-3); border-left: 4px solid var(--vr-critical); background: var(--vr-critical-bg); color: var(--vr-critical); }
+.demo-card { margin: var(--vr-space-6) 0; padding: var(--vr-space-5); border: 2px solid var(--vr-info); border-radius: var(--vr-radius); background: var(--vr-info-bg); }
+.demo-code { font-size: 1.5rem; letter-spacing: .18em; }
+.demo-label { padding: var(--vr-space-2) var(--vr-space-3); border-radius: var(--vr-radius-sm); background: var(--vr-info-bg); color: var(--vr-info); font-weight: 700; }
+.check-row { display: grid; grid-template-columns: var(--vr-target) 1fr; align-items: start; gap: var(--vr-space-3); }
+.check-row input { width: 1.5rem; min-height: var(--vr-target); margin: 0; }
 
 .app-disclaimer {
   padding: var(--vr-space-4);

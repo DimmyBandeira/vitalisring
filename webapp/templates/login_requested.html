@@ -1,0 +1,17 @@
+{% extends "base_app.html" %}
+{% block content %}
+<section class="auth-card" aria-labelledby="requested-title">
+  <p class="app-eyebrow">Acesso solicitado</p>
+  <h1 id="requested-title">Confira seu e-mail</h1>
+  <p>Se o endereço estiver cadastrado, enviaremos um link e um código de acesso. O envio pode levar alguns instantes.</p>
+  {% if demo_preview %}
+  <aside class="demo-card" aria-labelledby="demo-title">
+    <p class="app-eyebrow" id="demo-title">Modo demonstração — link de acesso</p>
+    <p><a class="vr-btn vr-btn--primary" href="{{ demo_preview.magic_link }}">Entrar na demonstração</a></p>
+    <p>Código: <strong class="demo-code">{{ demo_preview.code }}</strong></p>
+    <p class="app-help">Credencial temporária exibida somente para usuário com dados fictícios.</p>
+  </aside>
+  {% endif %}
+  <p><a href="/login/codigo">Digitar o código</a> · <a href="/login">Solicitar novamente</a></p>
+</section>
+{% endblock %}

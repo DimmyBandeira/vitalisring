@@ -1,0 +1,14 @@
+{% extends "base_app.html" %}
+{% block content %}
+<section class="auth-card auth-card--wide" aria-labelledby="consent-title">
+  <p class="app-eyebrow">Antes de continuar</p>
+  <h1 id="consent-title">Seu consentimento</h1>
+  <p>O Vitalis Ring apresenta estimativas automáticas de bem-estar. Elas podem conter erros e não substituem avaliação médica.</p>
+  <p>Ao continuar, você autoriza o tratamento dos dados necessários para prestar o serviço e reconhece que poderá revisar ou revogar autorizações de compartilhamento.</p>
+  <form class="app-form" method="post" action="/app/consentimento">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <label class="check-row"><input name="accepted" type="checkbox" value="yes" required> Li e concordo em continuar com esta versão de demonstração.</label>
+    <button class="vr-btn vr-btn--primary" type="submit">Aceitar e continuar</button>
+  </form>
+</section>
+{% endblock %}
