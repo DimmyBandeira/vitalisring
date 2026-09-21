@@ -19,7 +19,11 @@ def env_flag(name: str, default: bool = False) -> bool:
     return value.strip().lower() in TRUE_VALUES
 
 
-def validate_public_exposure(api_key: str, public_exposure: bool) -> None:
+def validate_public_exposure(
+    api_key: str,
+    public_exposure: bool,
+    session_secret: str | None = None,
+) -> None:
     """Recusa iniciar uma aplicação publicamente exposta com chave insegura."""
     if not api_key:
         raise RuntimeError("API_KEY não configurada")
@@ -30,4 +34,8 @@ def validate_public_exposure(api_key: str, public_exposure: bool) -> None:
     if len(api_key) < 32 or normalized in KNOWN_UNSAFE_KEYS:
         raise RuntimeError(
             "PUBLIC_EXPOSURE=1 exige API_KEY aleatória com pelo menos 32 caracteres"
+        )
+    if session_secret is not None and len(session_secret) < 32:
+        raise RuntimeError(
+            "PUBLIC_EXPOSURE=1 exige SESSION_SECRET com pelo menos 32 caracteres"
         )

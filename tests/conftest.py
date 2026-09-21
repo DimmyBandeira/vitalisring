@@ -18,6 +18,7 @@ os.environ["API_URL"] = "http://127.0.0.1:8000"
 os.environ["DEVICE_ID"] = "test-ring-01"
 os.environ["ENV"] = "test"
 os.environ["PUBLIC_EXPOSURE"] = "1"
+os.environ["SESSION_SECRET"] = "pytest-session-secret-with-32-plus-characters"
 
 
 def pytest_sessionfinish(session, exitstatus):
