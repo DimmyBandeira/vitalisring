@@ -10,7 +10,7 @@ ROOT = os.path.dirname(os.path.abspath(__file__))
 DIST = os.path.join(ROOT, "dist")
 PACK = os.environ.get("PACK_DIR", ROOT)
 SITE_URL = os.environ.get("SITE_URL", "https://vitalisring.com.br").rstrip("/")
-APP_URL = os.environ.get("APP_URL", "https://app.vitalisring.com.br").rstrip("/")
+APP_URL = os.environ.get("APP_URL", "").rstrip("/")
 WA_NUMBER = os.environ.get("WHATSAPP_NUMBER", "5521981918090")  # NÚMERO DE TESTE — trocar antes do lançamento
 WA_MSG = os.environ.get("WHATSAPP_MESSAGE", "Olá! Gostaria de saber mais sobre o Vitalis Ring.")
 WA_LINK = f"https://wa.me/{WA_NUMBER}?text={urllib.parse.quote(WA_MSG)}"
@@ -28,6 +28,33 @@ PAGES = [
      "description": "Anel inteligente que acompanha o bem-estar de quem você ama e avisa a família quando algo sai do padrão. Entre na lista de espera.",
      "jsonld": True},
 ]
+
+COMING_SOON_PAGES = [
+    ("/para-familias/", "Para famílias"),
+    ("/para-medicos/", "Para médicos"),
+    ("/para-instituicoes/", "Para instituições"),
+    ("/como-funciona/", "Como funciona"),
+    ("/perguntas-frequentes/", "Perguntas frequentes"),
+    ("/seguranca-e-privacidade/", "Segurança e privacidade"),
+    ("/lista-de-espera/", "Lista de espera"),
+    ("/agendar-demonstracao/", "Agendar demonstração"),
+    ("/programa-piloto-medicos/", "Programa piloto para médicos"),
+    ("/contato/", "Contato"),
+    ("/termos-de-uso/", "Termos de Uso"),
+    ("/politica-de-privacidade/", "Política de Privacidade"),
+    ("/politica-de-cookies/", "Política de Cookies"),
+]
+PAGES.extend(
+    {
+        "route": route,
+        "template": "coming_soon.html",
+        "title": f"{label} | Vitalis Ring",
+        "heading": label,
+        "description": f"A página {label} do Vitalis Ring está em preparação.",
+        "noindex": True,
+    }
+    for route, label in COMING_SOON_PAGES
+)
 
 def h(path):
     with open(path, "rb") as f:

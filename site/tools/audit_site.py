@@ -43,6 +43,13 @@ FORBIDDEN_JSONLD = {"MedicalWebPage", "MedicalDevice", "MedicalCondition", "Medi
 RESOURCE_RELS = {"stylesheet", "preload", "modulepreload", "prefetch", "icon", "shortcut", "apple-touch-icon",
                  "manifest", "preconnect", "dns-prefetch", "mask-icon"}
 SKIP_TAGS = {"script", "style", "noscript", "template", "svg", "head"}
+DEFAULT_NOINDEX = [
+    "/obrigado/", "/confirmado/", "/para-familias/", "/para-medicos/",
+    "/para-instituicoes/", "/como-funciona/", "/perguntas-frequentes/",
+    "/seguranca-e-privacidade/", "/lista-de-espera/",
+    "/agendar-demonstracao/", "/programa-piloto-medicos/", "/contato/",
+    "/termos-de-uso/", "/politica-de-privacidade/", "/politica-de-cookies/",
+]
 
 
 # ----------------------------------------------------------------------------- parser
@@ -472,7 +479,7 @@ def audit_dist(args, rep):
             absu = urllib.parse.urljoin(base, href)
             pu = urllib.parse.urlsplit(absu)
             if pu.netloc.lower() in (site_host, "www." + site_host):
-                if not exists(pu.path or "/"):
+                if not exists(pu.path or "/") and (pu.path or "/") not in args.allow_route:
                     rep.add(ERROR, route, "LNK-002", f"Link interno quebrado: {href}")
         for tag, url in pg.resources:
             if url.startswith("/") and not url.startswith("//"):
@@ -645,9 +652,10 @@ def main():
     ap.add_argument("--live", help="URL do site publicado (ex.: https://vitalisring.com.br)")
     ap.add_argument("--site-url", default=DEFAULT_SITE, help=f"URL canônica (padrão {DEFAULT_SITE})")
     ap.add_argument("--production", action="store_true", help="pendências e número de teste viram ERRO")
-    ap.add_argument("--noindex", nargs="*", default=["/obrigado/", "/confirmado/"], help="rotas que devem ser noindex")
+    ap.add_argument("--noindex", nargs="*", default=DEFAULT_NOINDEX, help="rotas que devem ser noindex")
     ap.add_argument("--allow-host", nargs="*", default=[], help="hosts externos permitidos para scripts/estilos/imagens")
     ap.add_argument("--allow-form-host", nargs="*", default=None, help="hosts permitidos como destino de formulário")
+    ap.add_argument("--allow-route", nargs="*", default=["/login"], help="rotas dinâmicas servidas pela aplicação")
     ap.add_argument("--ignore", nargs="*", default=[], help="códigos a ignorar (ex.: CLM-002)")
     ap.add_argument("--min-chars", type=int, default=400, help="mínimo de caracteres de texto no HTML")
     ap.add_argument("--json", help="grava relatório JSON neste caminho")
