@@ -24,7 +24,8 @@ class User(Base):
     full_name = Column(String, nullable=False)
     role = Column(String, index=True, nullable=False)
     password_hash = Column(String, nullable=True)
-    totp_secret = Column(String, nullable=True)
+    # Conteúdo cifrado; a chave de criptografia será configurada na fase MFA.
+    totp_secret_encrypted = Column(String, nullable=True)
     is_active = Column(Boolean, default=True, nullable=False)
     is_demo = Column(Boolean, default=False, nullable=False)
     created_at = Column(DateTime, default=utcnow, nullable=False)
