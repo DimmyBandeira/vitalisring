@@ -112,7 +112,7 @@ def get_history(
     check_api_key(x_api_key)
     db = SessionLocal()
     try:
-        since = datetime.utcnow() - timedelta(hours=hours)
+        since = datetime.now(timezone.utc).replace(tzinfo=None) - timedelta(hours=hours)
         rows = (
             db.query(Reading)
             .filter(Reading.device_id == device_id, Reading.type == type, Reading.timestamp >= since)
