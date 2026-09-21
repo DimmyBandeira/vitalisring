@@ -17,6 +17,7 @@ os.environ["RING_ADDRESS"] = "00:00:00:00:00:00"
 os.environ["API_URL"] = "http://127.0.0.1:8000"
 os.environ["DEVICE_ID"] = "test-ring-01"
 os.environ["ENV"] = "test"
+os.environ["PUBLIC_EXPOSURE"] = "1"
 
 
 def pytest_sessionfinish(session, exitstatus):

@@ -6,6 +6,7 @@ Rodar com: uvicorn api:app --host 0.0.0.0 --port 8000
 """
 
 import os
+from contextlib import asynccontextmanager
 from datetime import datetime, timedelta, timezone
 from typing import Literal
 
@@ -16,15 +17,28 @@ from pydantic import BaseModel
 load_dotenv()
 
 from models import Reading, SessionLocal, init_db
+from webapp.security.config import env_flag, validate_public_exposure
+from webapp.security.headers import install_security_headers
 
-API_KEY = os.environ["API_KEY"]
+API_KEY = os.environ.get("API_KEY", "")
+PUBLIC_EXPOSURE = env_flag("PUBLIC_EXPOSURE")
+validate_public_exposure(API_KEY, PUBLIC_EXPOSURE)
 
-app = FastAPI(title="Ring Health API")
 
-
-@app.on_event("startup")
-def startup():
+@asynccontextmanager
+async def lifespan(_app: FastAPI):
     init_db()
+    yield
+
+
+app = FastAPI(
+    title="Ring Health API",
+    docs_url=None if PUBLIC_EXPOSURE else "/docs",
+    redoc_url=None if PUBLIC_EXPOSURE else "/redoc",
+    openapi_url=None if PUBLIC_EXPOSURE else "/openapi.json",
+    lifespan=lifespan,
+)
+install_security_headers(app, PUBLIC_EXPOSURE)
 
 
 def check_api_key(x_api_key: str | None):
