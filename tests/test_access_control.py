@@ -75,6 +75,43 @@ def test_customer_can_access_only_linked_patient(client):
     assert denied.status_code == 403
 
 
+def test_form_and_htmx_cannot_bypass_patient_authorization(client):
+    _user_id, patient_id, unrelated_id, new_session = make_user_and_patient("customer")
+    client.cookies.set(COOKIE_NAME, new_session.token)
+    headers = {
+        "Origin": "http://testserver",
+        "X-CSRF-Token": new_session.csrf_token,
+        "HX-Request": "true",
+    }
+
+    allowed = client.post(
+        "/app/api/patients/select",
+        data={"patient_id": patient_id},
+        headers=headers,
+    )
+    tampered = client.post(
+        "/app/api/patients/select",
+        data={"patient_id": unrelated_id},
+        headers=headers,
+    )
+
+    assert allowed.status_code == 200
+    assert tampered.status_code == 403
+
+
+def test_browser_post_requires_csrf_even_for_authorized_patient(client):
+    _user_id, patient_id, _unrelated_id, new_session = make_user_and_patient("customer")
+    client.cookies.set(COOKIE_NAME, new_session.token)
+
+    response = client.post(
+        "/app/api/patients/select",
+        data={"patient_id": patient_id},
+        headers={"Origin": "http://testserver", "HX-Request": "true"},
+    )
+
+    assert response.status_code == 403
+
+
 @pytest.mark.parametrize("role", ["doctor", "institution", "technician"])
 def test_professional_requires_consent_and_access_is_audited(client, role):
     user_id, patient_id, _unrelated_id, new_session = make_user_and_patient(

@@ -19,6 +19,7 @@ os.environ["DEVICE_ID"] = "test-ring-01"
 os.environ["ENV"] = "test"
 os.environ["PUBLIC_EXPOSURE"] = "1"
 os.environ["SESSION_SECRET"] = "pytest-session-secret-with-32-plus-characters"
+os.environ["PUBLIC_BASE_URL"] = "http://testserver"
 
 
 def pytest_sessionfinish(session, exitstatus):
