@@ -148,20 +148,20 @@ Aceite:
 
 ### Fase 1 — Proteção da API antes de exposição pública
 
-Status: `[ ]`
+Status: `[x]`
 
 Objetivo: impedir que dados de saúde sejam consultados anonimamente.
 
 Tarefas:
 
-- [ ] Exigir API key nos GETs existentes enquanto ainda não houver sessão web.
-- [ ] Manter `POST /readings/bulk` compatível com o coletor.
-- [ ] Desativar `/docs`, `/redoc` e `/openapi.json` com
+- [x] Exigir API key nos GETs existentes enquanto ainda não houver sessão web.
+- [x] Manter `POST /readings/bulk` compatível com o coletor.
+- [x] Desativar `/docs`, `/redoc` e `/openapi.json` com
   `PUBLIC_EXPOSURE=1`.
-- [ ] Adicionar cabeçalhos de segurança.
-- [ ] Fazer a aplicação recusar exposição pública com segredos fracos ou ausentes.
-- [ ] Documentar que somente a porta 8000 será exposta.
-- [ ] Manter o Streamlit em `127.0.0.1:8501`.
+- [x] Adicionar cabeçalhos de segurança.
+- [x] Fazer a aplicação recusar exposição pública com segredos fracos ou ausentes.
+- [x] Documentar que somente a porta 8000 será exposta.
+- [x] Manter o Streamlit em `127.0.0.1:8501`.
 
 Testes obrigatórios:
 
@@ -567,4 +567,22 @@ temporário com prefixo vitalis-pytest-.
 Pendências/riscos: api.py usa o evento startup depreciado do FastAPI; será
 tratado quando a aplicação for estruturada, sem afetar os testes atuais.
 Próximo passo: Fase 1 — proteção da API antes de exposição pública.
+```
+
+### 2026-09-21 — Fase 1 concluída
+
+```text
+Data/hora: 2026-09-21
+Fase: 1 — Proteção da API antes de exposição pública
+Alterações: autenticação por X-API-Key nos GETs; contrato do POST preservado;
+OpenAPI desativado no modo público; validação de chave; cabeçalhos defensivos;
+no-store em leituras; ciclo de vida FastAPI atualizado; runbook de portas.
+Comandos executados: pytest; compileall; git diff --check.
+Resultados: 11 testes passaram; GET anônimo retorna 401; API key válida retorna
+200; POST legado retorna 200; documentação retorna 404 em PUBLIC_EXPOSURE=1;
+cabeçalhos e rejeição de chave fraca confirmados.
+Evidências: commits 18a3533 e e65fd5b.
+Pendências/riscos: avisos de compatibilidade do TestClient e uso legado de
+datetime.utcnow; não afetam o aceite e serão tratados nas fases de fundação.
+Próximo passo: Fase 2 — fundação da aplicação web integrada.
 ```
