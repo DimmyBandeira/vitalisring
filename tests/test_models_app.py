@@ -20,6 +20,7 @@ EXPECTED_TABLES = {
     "alerts",
     "access_log",
     "refresh_requests",
+    "rate_limit_buckets",
 }
 
 

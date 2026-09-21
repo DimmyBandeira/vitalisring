@@ -28,6 +28,8 @@ class User(Base):
     totp_secret_encrypted = Column(String, nullable=True)
     is_active = Column(Boolean, default=True, nullable=False)
     is_demo = Column(Boolean, default=False, nullable=False)
+    consent_version = Column(String, nullable=True)
+    consented_at = Column(DateTime, nullable=True)
     created_at = Column(DateTime, default=utcnow, nullable=False)
 
 
@@ -149,3 +151,13 @@ class RefreshRequest(Base):
     requested_at = Column(DateTime, default=utcnow, nullable=False)
     expires_at = Column(DateTime, nullable=False)
     completed_at = Column(DateTime, nullable=True)
+
+
+class RateLimitBucket(Base):
+    __tablename__ = "rate_limit_buckets"
+
+    id = Column(String, primary_key=True, default=new_id)
+    key_hash = Column(String, unique=True, index=True, nullable=False)
+    scope = Column(String, index=True, nullable=False)
+    window_started_at = Column(DateTime, nullable=False)
+    count = Column(Integer, default=0, nullable=False)

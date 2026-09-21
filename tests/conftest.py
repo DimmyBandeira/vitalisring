@@ -20,6 +20,8 @@ os.environ["ENV"] = "test"
 os.environ["PUBLIC_EXPOSURE"] = "1"
 os.environ["SESSION_SECRET"] = "pytest-session-secret-with-32-plus-characters"
 os.environ["PUBLIC_BASE_URL"] = "http://testserver"
+os.environ["DEMO_MODE"] = "1"
+os.environ["MAILER"] = "console"
 
 
 def pytest_sessionfinish(session, exitstatus):

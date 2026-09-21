@@ -18,7 +18,7 @@ from pydantic import BaseModel
 load_dotenv()
 
 from models import Reading, SessionLocal, init_db
-from webapp.security.config import env_flag, validate_public_exposure
+from webapp.security.config import env_flag, validate_demo_mode, validate_public_exposure
 from webapp.security.headers import install_security_headers
 from webapp.routes.pages import router as web_pages_router
 from webapp.routes.api_app import router as app_api_router
@@ -27,6 +27,7 @@ API_KEY = os.environ.get("API_KEY", "")
 PUBLIC_EXPOSURE = env_flag("PUBLIC_EXPOSURE")
 SESSION_SECRET = os.environ.get("SESSION_SECRET", "")
 validate_public_exposure(API_KEY, PUBLIC_EXPOSURE, SESSION_SECRET)
+validate_demo_mode(os.environ.get("ENV", "dev"), env_flag("DEMO_MODE"))
 
 
 @asynccontextmanager

@@ -39,3 +39,8 @@ def validate_public_exposure(
         raise RuntimeError(
             "PUBLIC_EXPOSURE=1 exige SESSION_SECRET com pelo menos 32 caracteres"
         )
+
+
+def validate_demo_mode(environment: str, demo_mode: bool) -> None:
+    if environment.strip().lower() == "prod" and demo_mode:
+        raise RuntimeError("ENV=prod não permite DEMO_MODE=1")
