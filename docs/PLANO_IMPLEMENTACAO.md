@@ -173,20 +173,20 @@ Testes obrigatórios:
 
 ### Fase 2 — Fundação da aplicação web integrada
 
-Status: `[ ]`
+Status: `[x]`
 
 Objetivo: servir site, login e área logada pelo mesmo FastAPI.
 
 Tarefas:
 
-- [ ] Criar `webapp/` e seus módulos fundamentais.
-- [ ] Montar recursos estáticos locais, sem CDN.
-- [ ] Montar `site/dist` na raiz somente depois de registrar todas as rotas.
-- [ ] Criar `/login`, `/app` e `/logout` inicialmente sem dados reais.
-- [ ] Reaproveitar os tokens visuais existentes como fonte canônica.
-- [ ] Criar páginas provisórias para todos os links ainda inexistentes do site.
-- [ ] Garantir navegação por teclado, foco visível e alvos mínimos de 48 px.
-- [ ] Adicionar aviso regulatório fixo às telas logadas.
+- [x] Criar `webapp/` e seus módulos fundamentais.
+- [x] Montar recursos estáticos locais, sem CDN.
+- [x] Montar `site/dist` na raiz somente depois de registrar todas as rotas.
+- [x] Criar `/login`, `/app` e `/logout` inicialmente sem dados reais.
+- [x] Reaproveitar os tokens visuais existentes como fonte canônica.
+- [x] Criar páginas provisórias para todos os links ainda inexistentes do site.
+- [x] Garantir navegação por teclado, foco visível e alvos mínimos de 48 px.
+- [x] Adicionar aviso regulatório fixo às telas logadas.
 
 Testes obrigatórios:
 
@@ -585,4 +585,25 @@ Evidências: commits 18a3533 e e65fd5b.
 Pendências/riscos: avisos de compatibilidade do TestClient e uso legado de
 datetime.utcnow; não afetam o aceite e serão tratados nas fases de fundação.
 Próximo passo: Fase 2 — fundação da aplicação web integrada.
+```
+
+### 2026-09-21 — Fase 2 concluída
+
+```text
+Data/hora: 2026-09-21
+Fase: 2 — Fundação da aplicação web integrada
+Alterações: site, login e área logada servidos pelo mesmo FastAPI; montagem das
+rotas antes do site estático; templates Jinja; tokens visuais compartilhados;
+HTMX 2.0.9 local; 13 páginas provisórias noindex; 404 personalizado.
+Comandos executados: dois builds; audit_site.py; pytest; compileall; node
+--check; inspeção no Chrome em desktop e viewport 390x844.
+Resultados: 28 testes passaram; auditor com 0 erros e 30 avisos conhecidos de
+conteúdo pendente; nenhum link retorna 404; nenhum recurso externo na área
+logada; corpo 18 px; controles de 48 px ou mais; sem overflow horizontal;
+nenhum erro ou aviso no console do navegador.
+Evidências: commits 5780c11 e 8a0350c; SHA-256 do HTMX registrado em
+static/vendor/README.md.
+Pendências/riscos: login ainda é uma tela estrutural sem envio de dados, por
+decisão da fase; conteúdo jurídico e número de WhatsApp continuam pendentes.
+Próximo passo: Fase 3 — identidade, autorização e auditoria.
 ```
