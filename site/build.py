@@ -39,7 +39,9 @@ def read(p):
 
 def main():
     shutil.rmtree(DIST, ignore_errors=True)
-    os.makedirs(os.path.join(DIST, "assets", "logo"))
+    # OneDrive pode recriar/segurar a pasta por alguns instantes. O build deve
+    # continuar idempotente mesmo quando a remoção acima não for completa.
+    os.makedirs(os.path.join(DIST, "assets", "logo"), exist_ok=True)
     # ativos de marca e fontes
     logo = os.path.join(PACK, "design", "logo")
     for fn in os.listdir(logo):
@@ -48,7 +50,8 @@ def main():
             shutil.copy(src, os.path.join(DIST, "assets", "logo", fn))
         elif fn in ("favicon.ico", "favicon.svg", "apple-touch-icon.png", "icon-192.png", "icon-512.png", "og-default.png", "site.webmanifest"):
             shutil.copy(src, os.path.join(DIST, fn))
-    shutil.copytree(os.path.join(PACK, "design", "fonts"), os.path.join(DIST, "fonts"), ignore=shutil.ignore_patterns("LICENSE*"))
+    shutil.copytree(os.path.join(PACK, "design", "fonts"), os.path.join(DIST, "fonts"),
+                    ignore=shutil.ignore_patterns("LICENSE*"), dirs_exist_ok=True)
     for fn in os.listdir(os.path.join(PACK, "design", "fonts")):
         if fn.startswith("LICENSE"):
             shutil.copy(os.path.join(PACK, "design", "fonts", fn), os.path.join(DIST, "fonts", fn.replace(".txt", "") + ".txt"))
@@ -57,7 +60,7 @@ def main():
     hero_dir = os.path.join(ROOT, "static", "hero")
     hero_w = hero_h = None
     if os.environ.get("HERO", "auto") != "svg" and os.path.isfile(os.path.join(hero_dir, "anel-hero-1200.webp")):
-        os.makedirs(os.path.join(DIST, "hero")); [shutil.copy(os.path.join(hero_dir, f), os.path.join(DIST, "hero", f)) for f in os.listdir(hero_dir) if f.endswith(".webp")]; hero_image = "anel-hero"
+        os.makedirs(os.path.join(DIST, "hero"), exist_ok=True); [shutil.copy(os.path.join(hero_dir, f), os.path.join(DIST, "hero", f)) for f in os.listdir(hero_dir) if f.endswith(".webp")]; hero_image = "anel-hero"
         from PIL import Image
         with Image.open(os.path.join(hero_dir, "anel-hero-1200.webp")) as _im:
             hero_w, hero_h = _im.size
@@ -69,7 +72,7 @@ def main():
     ctmp, jtmp = os.path.join(DIST, "assets", "_c.css"), os.path.join(DIST, "assets", "_j.js")
     open(ctmp, "w", encoding="utf-8").write(css); open(jtmp, "w", encoding="utf-8").write(js)
     css_file, js_file = f"site.{h(ctmp)}.css", f"site.{h(jtmp)}.js"
-    os.rename(ctmp, os.path.join(DIST, "assets", css_file)); os.rename(jtmp, os.path.join(DIST, "assets", js_file))
+    os.replace(ctmp, os.path.join(DIST, "assets", css_file)); os.replace(jtmp, os.path.join(DIST, "assets", js_file))
 
     env = Environment(loader=FileSystemLoader(os.path.join(ROOT, "templates")), autoescape=select_autoescape(["html"]))
     m = re.search(r'width="(\d+)" height="(\d+)"', read(os.path.join(logo, "logo-horizontal-claro.svg"))[:400])

@@ -635,6 +635,11 @@ def print_report(rep):
 
 
 def main():
+    # O PowerShell clássico pode anunciar cp1252 mesmo quando o projeto e o
+    # terminal trabalham com UTF-8. Evita falha ao imprimir os símbolos do
+    # relatório e mantém uma substituição segura em consoles mais antigos.
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     ap = argparse.ArgumentParser(description="Auditoria do site Vitalis Ring (SEO técnico, copy regulatória, pendências).")
     ap.add_argument("--dist", help="pasta do build (ex.: ./dist)")
     ap.add_argument("--live", help="URL do site publicado (ex.: https://vitalisring.com.br)")
