@@ -27,11 +27,32 @@ def record_patient_access(
 ) -> None:
     if user.role not in AUDITED_ROLES:
         return
+    record_action(
+        db,
+        user=user,
+        patient_id=patient_id,
+        action="view_patient",
+        purpose=purpose,
+        request_id=request_id,
+        ip=ip,
+    )
+
+
+def record_action(
+    db: Session,
+    *,
+    user: User,
+    patient_id: str | None,
+    action: str,
+    purpose: str,
+    request_id: str | None,
+    ip: str | None,
+) -> None:
     db.add(
         AccessLog(
             user_id=user.id,
             patient_id=patient_id,
-            action="view_patient",
+            action=action,
             purpose=purpose,
             request_id=request_id,
             ip_hash=anonymize_ip(ip),

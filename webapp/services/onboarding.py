@@ -110,3 +110,16 @@ def activate_synthetic_device(db: Session, *, device: Device, technician: User) 
     device.status = "active"
     device.activated_at = now
     db.commit()
+
+
+def unassign_device(db: Session, *, device: Device, technician: User) -> str | None:
+    if technician.role not in {"technician", "owner"}:
+        raise OnboardingError("Usuário sem permissão técnica")
+    if technician.role == "technician" and device.registered_by != technician.id:
+        raise OnboardingError("Dispositivo fora do escopo deste técnico")
+    previous_patient_id = device.patient_id
+    device.patient_id = None
+    device.status = "unassigned"
+    device.activated_at = None
+    db.commit()
+    return previous_patient_id

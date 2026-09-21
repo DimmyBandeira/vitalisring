@@ -11,12 +11,14 @@ from webapp.routes.common import templates
 from webapp.security.config import env_flag
 from webapp.security.csrf import validate_session_csrf
 from webapp.security.magic_login import request_login
+from webapp.security.audit import record_action
 from webapp.security.sessions import CSRF_COOKIE_NAME, authenticated_context, get_db
 from webapp.services.mailer import configured_mailer
 from webapp.services.onboarding import (
     OnboardingError,
     activate_synthetic_device,
     create_customer_onboarding,
+    unassign_device,
 )
 
 
@@ -108,6 +110,15 @@ def create_customer(
         mailer=configured_mailer(),
         demo_mode=env_flag("DEMO_MODE"),
     )
+    record_action(
+        db,
+        user=user,
+        patient_id=result.patient.id,
+        action="onboarding_created",
+        purpose="device_activation",
+        request_id=request.headers.get("X-Request-ID"),
+        ip=request.client.host if request.client else None,
+    )
     return templates.TemplateResponse(
         request=request,
         name="technician_created.html",
@@ -162,4 +173,42 @@ def activate_demo_device(
         activate_synthetic_device(db, device=device, technician=user)
     except OnboardingError as exc:
         raise HTTPException(status_code=403, detail=str(exc)) from exc
+    record_action(
+        db,
+        user=user,
+        patient_id=device.patient_id,
+        action="synthetic_device_activated",
+        purpose="device_activation",
+        request_id=request.headers.get("X-Request-ID"),
+        ip=request.client.host if request.client else None,
+    )
     return RedirectResponse(f"/app/tecnico/dispositivos/{device.id}", status_code=303)
+
+
+@router.post("/dispositivos/{device_id}/desassociar")
+def detach_device(
+    device_id: str,
+    request: Request,
+    csrf_token: str = Form(""),
+    db: Session = Depends(get_db),
+):
+    session, user = technical_context(request, db)
+    if not validate_session_csrf(request, csrf_token, session.csrf_hash):
+        raise HTTPException(status_code=403, detail="Requisição inválida")
+    device = db.query(Device).filter(Device.id == device_id).first()
+    if device is None:
+        raise HTTPException(status_code=404, detail="Dispositivo não encontrado")
+    try:
+        previous_patient_id = unassign_device(db, device=device, technician=user)
+    except OnboardingError as exc:
+        raise HTTPException(status_code=403, detail=str(exc)) from exc
+    record_action(
+        db,
+        user=user,
+        patient_id=previous_patient_id,
+        action="device_unassigned",
+        purpose="technical_support",
+        request_id=request.headers.get("X-Request-ID"),
+        ip=request.client.host if request.client else None,
+    )
+    return RedirectResponse("/app/tecnico", status_code=303)

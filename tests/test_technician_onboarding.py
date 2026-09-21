@@ -8,7 +8,7 @@ from fastapi.testclient import TestClient
 
 import api
 from models import Reading, SessionLocal, init_db, utcnow_naive
-from webapp.models_app import CareLink, Device, Patient, User
+from webapp.models_app import AccessLog, CareLink, Device, Patient, User
 from webapp.security.sessions import COOKIE_NAME, CSRF_COOKIE_NAME, create_session
 
 
@@ -158,6 +158,42 @@ def test_synthetic_first_reading_activates_only_the_registered_device(technician
     assert device.status == "active"
     assert device.activated_at is not None
     assert {reading.type for reading in readings} == {"heart_rate", "spo2", "battery"}
+    db.close()
+
+
+def test_unassign_is_audited_and_preserves_existing_readings(technician_client):
+    client, technician_id, _email, csrf = technician_client
+    suffix = str(utcnow_naive().timestamp()).replace(".", "")
+    payload = onboarding_payload(csrf, suffix)
+    assert client.post("/app/tecnico/novo", data=payload, headers={"Origin": "http://testserver"}).status_code == 201
+    db = SessionLocal()
+    device = db.query(Device).filter(Device.device_id == payload["device_id"]).one()
+    device_pk = device.id
+    db.close()
+    assert client.post(
+        f"/app/tecnico/dispositivos/{device_pk}/ativar-demo",
+        data={"csrf_token": csrf}, headers={"Origin": "http://testserver"},
+    ).status_code == 200
+
+    detached = client.post(
+        f"/app/tecnico/dispositivos/{device_pk}/desassociar",
+        data={"csrf_token": csrf},
+        headers={"Origin": "http://testserver"},
+        follow_redirects=False,
+    )
+
+    assert detached.status_code == 303
+    db = SessionLocal()
+    device = db.get(Device, device_pk)
+    assert device.patient_id is None
+    assert device.status == "unassigned"
+    assert db.query(Reading).filter(Reading.device_id == payload["device_id"]).count() == 3
+    audit = (
+        db.query(AccessLog)
+        .filter(AccessLog.user_id == technician_id, AccessLog.action == "device_unassigned")
+        .one()
+    )
+    assert audit.purpose == "technical_support"
     db.close()
 
 
