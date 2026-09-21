@@ -238,21 +238,21 @@ Testes obrigatórios:
 
 ### Fase 4 — Login do cliente e consentimento
 
-Status: `[ ]`
+Status: `[x]`
 
 Objetivo: permitir acesso B2C sem senha.
 
 Tarefas:
 
-- [ ] Solicitação de link mágico por e-mail com resposta sempre neutra.
-- [ ] Código alternativo de seis dígitos utilizável em outro aparelho.
-- [ ] Token forte, uso único, validade de 15 minutos e somente hash no banco.
-- [ ] Rate limit por IP e identificador normalizado.
-- [ ] Mailer abstrato com implementações `console` e SMTP.
-- [ ] Mostrar acesso de demonstração na tela somente para contas sintéticas.
-- [ ] Impedir `DEMO_MODE=1` em produção.
-- [ ] Exibir consentimento no primeiro acesso.
-- [ ] Implementar logout e revogação da sessão.
+- [x] Solicitação de link mágico por e-mail com resposta sempre neutra.
+- [x] Código alternativo de seis dígitos utilizável em outro aparelho.
+- [x] Token forte, uso único, validade de 15 minutos e somente hash no banco.
+- [x] Rate limit por IP e identificador normalizado.
+- [x] Mailer abstrato com implementações `console` e SMTP.
+- [x] Mostrar acesso de demonstração na tela somente para contas sintéticas.
+- [x] Impedir `DEMO_MODE=1` em produção.
+- [x] Exibir consentimento no primeiro acesso.
+- [x] Implementar logout e revogação da sessão.
 
 Testes obrigatórios:
 
@@ -627,4 +627,25 @@ Pendências/riscos: cookies só serão emitidos pelo fluxo de login da Fase 4;
 segredo TOTP já possui campo reservado para conteúdo cifrado, mas MFA pertence à
 Fase 7.
 Próximo passo: Fase 4 — login do cliente e consentimento inicial.
+```
+
+### 2026-09-21 — Fase 4 concluída
+
+```text
+Data/hora: 2026-09-21
+Fase: 4 — Login do cliente e consentimento
+Alterações: link mágico e código de seis dígitos; hashes de uso único; rate limit
+persistente por IP/e-mail; mailer console/SMTP; cookies de sessão/CSRF;
+consentimento inicial; logout revogável; cartão exclusivo para conta demo.
+Comandos executados: pytest completo; inspeção visual do formulário no Chrome;
+git diff --check.
+Resultados: 52 testes passaram; resposta neutra; token/código não persistem em
+texto; reutilização negada; código funciona em fluxo separado; CSRF e origem
+estrangeira negados; cookies HttpOnly/SameSite/Secure conforme ambiente;
+consentimento obrigatório; logout revoga a sessão; ENV=prod recusa DEMO_MODE.
+Evidências: commits 241df26 e c7ff834.
+Pendências/riscos: SMTP real não foi acionado. O Chrome controlado exibiu
+ERR_BLOCKED_BY_CLIENT ao submeter POST para localhost; a tela foi inspecionada,
+mas o fluxo visual completo será repetido com navegador E2E dedicado na Fase 11.
+Próximo passo: Fase 5 — área do técnico e cadastro de novo cliente.
 ```
