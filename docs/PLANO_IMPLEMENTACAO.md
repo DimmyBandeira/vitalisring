@@ -198,7 +198,7 @@ Testes obrigatórios:
 
 ### Fase 3 — Modelo de identidade, autorização e auditoria
 
-Status: `[ ]`
+Status: `[x]`
 
 Objetivo: estabelecer papéis, vínculos e consentimentos antes dos dashboards.
 
@@ -217,15 +217,15 @@ Tabelas aditivas previstas:
 
 Tarefas:
 
-- [ ] Definir os papéis `owner`, `technician`, `customer`, `doctor` e
+- [x] Definir os papéis `owner`, `technician`, `customer`, `doctor` e
   `institution`.
-- [ ] Implementar sessões opacas com somente hash armazenado.
-- [ ] Implementar expiração deslizante e limite absoluto.
-- [ ] Implementar CSRF e validação exata de origem.
-- [ ] Centralizar autorização por paciente.
-- [ ] Exigir vínculo ativo e consentimento vigente para acesso profissional.
-- [ ] Registrar acessos profissionais sem valores de saúde.
-- [ ] Criar matriz documentada de permissões.
+- [x] Implementar sessões opacas com somente hash armazenado.
+- [x] Implementar expiração deslizante e limite absoluto.
+- [x] Implementar CSRF e validação exata de origem.
+- [x] Centralizar autorização por paciente.
+- [x] Exigir vínculo ativo e consentimento vigente para acesso profissional.
+- [x] Registrar acessos profissionais sem valores de saúde.
+- [x] Criar matriz documentada de permissões.
 
 Testes obrigatórios:
 
@@ -606,4 +606,25 @@ static/vendor/README.md.
 Pendências/riscos: login ainda é uma tela estrutural sem envio de dados, por
 decisão da fase; conteúdo jurídico e número de WhatsApp continuam pendentes.
 Próximo passo: Fase 3 — identidade, autorização e auditoria.
+```
+
+### 2026-09-21 — Fase 3 concluída
+
+```text
+Data/hora: 2026-09-21
+Fase: 3 — Modelo de identidade, autorização e auditoria
+Alterações: 10 tabelas aditivas; dispositivos separados de readings; foreign
+keys SQLite; sessões opacas com hash; expiração deslizante/absoluta; CSRF por
+token e origem; autorização central; consentimento; auditoria sem sinais vitais.
+Comandos executados: pytest completo; compile/imports nas regressões anteriores;
+git diff --check.
+Resultados: 41 testes passaram; tabela readings preservada; unicidade e FKs
+comprovadas; IDOR negado em URL, formulário adulterado e HTMX; cliente isolado;
+técnico, médico e instituição exigem consentimento; revogação bloqueia acesso;
+sessão expirada retorna 401; acesso profissional gera log anonimizado.
+Evidências: commits 155820c, 80f336c, d4ab75c e b7dc182.
+Pendências/riscos: cookies só serão emitidos pelo fluxo de login da Fase 4;
+segredo TOTP já possui campo reservado para conteúdo cifrado, mas MFA pertence à
+Fase 7.
+Próximo passo: Fase 4 — login do cliente e consentimento inicial.
 ```
