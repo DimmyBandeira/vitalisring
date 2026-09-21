@@ -62,8 +62,12 @@ def post_readings(payload: BulkReadingsIn, x_api_key: str | None = Header(defaul
 
 
 @app.get("/readings/latest")
-def get_latest(device_id: str = Query(default="ring-01")):
+def get_latest(
+    device_id: str = Query(default="ring-01"),
+    x_api_key: str | None = Header(default=None),
+):
     """Última leitura de cada tipo (pra visão 'ao vivo' do dashboard)."""
+    check_api_key(x_api_key)
     db = SessionLocal()
     try:
         result = {}
@@ -86,8 +90,10 @@ def get_history(
     device_id: str = Query(default="ring-01"),
     type: str = Query(default="heart_rate"),
     hours: int = Query(default=24, le=24 * 30),
+    x_api_key: str | None = Header(default=None),
 ):
     """Histórico de um tipo de leitura nas últimas N horas."""
+    check_api_key(x_api_key)
     db = SessionLocal()
     try:
         since = datetime.utcnow() - timedelta(hours=hours)
