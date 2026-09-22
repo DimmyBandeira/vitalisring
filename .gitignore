@@ -18,3 +18,4 @@ buffer.jsonl
 .pytest_cache/
 .coverage
 htmlcov/
+backups/
