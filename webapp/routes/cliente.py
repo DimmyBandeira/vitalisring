@@ -40,6 +40,10 @@ def app_home(request: Request, db: Session = Depends(get_db)):
     if redirect:
         return redirect
     _session, user = context
+    if user.role in {"doctor", "institution", "owner"}:
+        return RedirectResponse("/app/medico", status_code=303)
+    if user.role == "technician":
+        return RedirectResponse("/app/tecnico", status_code=303)
     if not user.consented_at:
         return RedirectResponse("/app/consentimento", status_code=303)
     dashboard = load_family_dashboard(db, user)
@@ -97,7 +101,8 @@ def refresh_patient(
         pending.status = "completed"
         pending.completed_at = utcnow_naive()
         db.commit()
-    return RedirectResponse("/app", status_code=303)
+    target = "/app/medico" if user.role in {"doctor", "institution", "owner"} else "/app"
+    return RedirectResponse(target, status_code=303)
 
 
 @router.post("/app/pacientes/{patient_id}/destinatarios/{recipient_id}")

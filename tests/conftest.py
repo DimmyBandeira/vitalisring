@@ -3,10 +3,11 @@
 import os
 import sys
 import tempfile
+import gc
 from pathlib import Path
 
 
-_test_dir = tempfile.TemporaryDirectory(prefix="vitalis-pytest-")
+_test_dir = tempfile.TemporaryDirectory(prefix="vitalis-pytest-", ignore_cleanup_errors=True)
 _test_db = Path(_test_dir.name, "test.sqlite").resolve()
 
 # Definir antes da coleta dos testes é essencial: models.py cria a engine no
@@ -29,4 +30,5 @@ def pytest_sessionfinish(session, exitstatus):
     models = sys.modules.get("models")
     if models is not None:
         models.engine.dispose()
+    gc.collect()
     _test_dir.cleanup()
