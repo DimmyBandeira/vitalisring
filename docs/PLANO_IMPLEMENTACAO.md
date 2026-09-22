@@ -400,19 +400,19 @@ Testes obrigatórios:
 
 ### Fase 10 — Canais de notificação
 
-Status: `[ ]`
+Status: `[x]`
 
 Objetivo: preparar canais atrás de uma abstração segura.
 
 Tarefas:
 
-- [ ] Criar interface `Notifier`.
-- [ ] Implementar console seguro e pré-visualização.
-- [ ] Implementar SMTP opcional.
-- [ ] Implementar adaptador opcional para WhatsApp Cloud API.
-- [ ] Exigir opt-in específico e canal verificado.
-- [ ] Manter envio real desligado por padrão.
-- [ ] Implementar idempotência e histórico sem conteúdo sensível.
+- [x] Criar interface `Notifier`.
+- [x] Implementar console seguro e pré-visualização.
+- [x] Implementar SMTP opcional.
+- [x] Implementar adaptador opcional para WhatsApp Cloud API.
+- [x] Exigir opt-in específico e canal verificado.
+- [x] Manter envio real desligado por padrão.
+- [x] Implementar idempotência e histórico sem conteúdo sensível.
 
 Testes obrigatórios:
 
@@ -734,4 +734,19 @@ não conclui; UI explicita simulação e validação clínica pendente.
 Evidências: commits acaaf2b e dfc77da; docs/SIMULADOR.md.
 Pendências/riscos: regras não possuem validação clínica e permanecem demo-only.
 Próximo passo: Fase 10 — canais de notificação.
+```
+
+### 2026-09-22 — Fase 10 concluída
+
+```text
+Data/hora: 2026-09-22
+Fase: 10 — Canais de notificação
+Alterações: Notifier; console seguro; SMTP/WhatsApp opcionais; opt-in e
+verificação; chave idempotente; histórico técnico sem conteúdo sensível.
+Comandos executados: pytest completo; git diff --check.
+Resultados: 99 testes passaram; mocks selecionam o canal; sem opt-in nada é
+acionado; retentativa não duplica; logs omitem nome, destino e mensagem.
+Evidências: commit 6d95d2e; docs/NOTIFICACOES.md.
+Pendências/riscos: envio real não foi testado nem habilitado.
+Próximo passo: Fase 11 — endurecimento e testes completos da web.
 ```
