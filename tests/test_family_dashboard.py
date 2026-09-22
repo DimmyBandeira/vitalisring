@@ -247,3 +247,20 @@ def test_refresh_poll_times_out_calmly(client, family_context):
     assert response.status_code == 200
     assert "Sem resposta do anel" in response.text
     assert "hx-get" not in response.text
+
+
+def test_double_click_keeps_only_one_active_physical_request(client, family_context, monkeypatch):
+    monkeypatch.setattr("webapp.routes.cliente.collect_once", lambda: None)
+    db = SessionLocal()
+    device = db.get(Device, family_context["device_pk"])
+    device.source = "physical"
+    db.commit()
+    db.close()
+    url = f"/app/pacientes/{family_context['patient_id']}/atualizar"
+    for _ in range(2):
+        response = client.post(url, data={"csrf_token": family_context["csrf"]}, headers={"Origin": "http://testserver"}, follow_redirects=False)
+        assert response.status_code == 303
+    db = SessionLocal()
+    active = db.query(RefreshRequest).filter(RefreshRequest.patient_id == family_context["patient_id"], RefreshRequest.status == "pending").count()
+    db.close()
+    assert active == 1
