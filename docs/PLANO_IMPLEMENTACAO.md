@@ -328,19 +328,19 @@ Testes obrigatórios:
 
 ### Fase 7 — Login forte e console médico
 
-Status: `[ ]`
+Status: `[x]`
 
 Objetivo: permitir acesso profissional com autenticação reforçada.
 
 Tarefas:
 
-- [ ] Senha com Argon2.
-- [ ] MFA TOTP obrigatório.
-- [ ] Configuração inicial por QR SVG local.
-- [ ] Códigos de recuperação de uso único armazenados como hash.
-- [ ] Lista de pacientes vinculados por prioridade demonstrativa.
-- [ ] Detalhe do paciente com tendência, leituras e auditoria.
-- [ ] Fluxo de “Atualizar agora” por solicitação assíncrona.
+- [x] Senha com Argon2.
+- [x] MFA TOTP obrigatório.
+- [x] Configuração inicial por QR SVG local.
+- [x] Códigos de recuperação de uso único armazenados como hash.
+- [x] Lista de pacientes vinculados por prioridade demonstrativa.
+- [x] Detalhe do paciente com tendência, leituras e auditoria.
+- [x] Fluxo de “Atualizar agora” por solicitação assíncrona.
 
 Testes obrigatórios:
 
@@ -686,4 +686,22 @@ Pendências/riscos: regras de avaliação entram na Fase 9; coletor físico e
 polling HTMX entram na Fase 8. POST no Chrome local segue bloqueado pelo cliente,
 mas foi coberto pelo teste ASGI.
 Próximo passo: Fase 7 — login forte e console médico.
+```
+
+### 2026-09-21 — Fase 7 concluída
+
+```text
+Data/hora: 2026-09-21
+Fase: 7 — Login forte e console médico
+Alterações: Argon2; desafio MFA; TOTP cifrado; QR SVG local; recuperação
+de uso único; rate limit; lista priorizada; detalhe, tendência e auditoria.
+Comandos executados: instalação das dependências; pytest completo;
+git diff --check.
+Resultados: 72 testes passaram; credenciais incorretas não criam sessão;
+recuperação não reutiliza; IDOR e consentimento revogado retornam 403;
+visualização autorizada produz access_log.
+Evidências: commits b856789 e e007881; docs/MEDICO.md.
+Pendências/riscos: execução do coletor, polling e timeout do pedido entram
+na Fase 8; rotação de SESSION_SECRET exige reprovisionar TOTP.
+Próximo passo: Fase 8 — atualização sob demanda e coletor compartilhado.
 ```
