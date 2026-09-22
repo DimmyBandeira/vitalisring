@@ -424,21 +424,21 @@ Testes obrigatórios:
 
 ### Fase 11 — Endurecimento e testes completos da web
 
-Status: `[ ]`
+Status: `[x]`
 
 Objetivo: validar todo o sistema antes de usar hardware ou ngrok.
 
 Cobertura obrigatória:
 
-- [ ] Testes unitários de regras, sessões, CSRF e permissões.
-- [ ] Testes de integração das rotas e do banco.
-- [ ] Testes ponta a ponta no navegador para família, técnico e médico.
-- [ ] Testes de IDOR, rate limit e expiração.
-- [ ] Teste de ausência de segredos e saúde nos logs.
-- [ ] Auditoria do site sem links quebrados.
-- [ ] Inspeção visual em celular e desktop.
-- [ ] Regressão da API, coletor e dashboard Streamlit.
-- [ ] Documentação de backup e recuperação do banco.
+- [x] Testes unitários de regras, sessões, CSRF e permissões.
+- [x] Testes de integração das rotas e do banco.
+- [x] Testes ponta a ponta no navegador para família, técnico e médico.
+- [x] Testes de IDOR, rate limit e expiração.
+- [x] Teste de ausência de segredos e saúde nos logs.
+- [x] Auditoria do site sem links quebrados.
+- [x] Inspeção visual em celular e desktop.
+- [x] Regressão da API, coletor e dashboard Streamlit.
+- [x] Documentação de backup e recuperação do banco.
 
 Aceite:
 
@@ -749,4 +749,21 @@ acionado; retentativa não duplica; logs omitem nome, destino e mensagem.
 Evidências: commit 6d95d2e; docs/NOTIFICACOES.md.
 Pendências/riscos: envio real não foi testado nem habilitado.
 Próximo passo: Fase 11 — endurecimento e testes completos da web.
+```
+
+### 2026-09-22 — Fase 11 concluída
+
+```text
+Data/hora: 2026-09-22
+Fase: 11 — Endurecimento e testes completos da web
+Alterações: backup verificado; README/CLAUDE atualizados; regressões,
+auditoria, varredura de segredos e QA visual dos três perfis.
+Comandos executados: pytest; build/audit do site; py_compile; node --check;
+secret scan; Uvicorn temporário; Chrome em 390x844 e 1280x800.
+Resultados: 100 testes; auditor 0 erros/30 avisos conhecidos; scan limpo;
+sem CDN no app; sem overflow; perfis e escopos corretos no navegador.
+Evidências: commit 85b647b; docs/TESTES.md e docs/BACKUP.md.
+Pendências/riscos: Chrome controlado bloqueou POST localhost; POSTs foram
+cobertos por ASGI. BLE, SMTP, WhatsApp e ngrok não foram acionados.
+Próximo passo: Fase 12 — portão manual com o anel e o usuário.
 ```

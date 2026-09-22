@@ -52,10 +52,14 @@ Em outro terminal, no mesmo servidor:
 ```bash
 cd server
 source venv/bin/activate
-streamlit run dashboard.py --server.port 8501 --server.address 0.0.0.0
+streamlit run dashboard.py --server.port 8501 --server.address 127.0.0.1
 ```
 
 Acesse `http://<ip-do-servidor>:8501`.
+
+O Streamlit é uma ferramenta local de operação e não deve ser publicado.
+A aplicação para famílias, técnicos e profissionais é servida pelo FastAPI
+na porta 8000.
 
 ## 3. Rodar o coletor (em casa, perto do anel)
 
@@ -92,6 +96,20 @@ Isso evita expor a API/dashboard diretamente pra internet — importante já que
 - ✅ Autenticação simples por API key
 - ⚠️ Histórico de SPO2 contínuo **ainda não existe** na lib (só leitura pontual em tempo real) — é uma limitação do reverse engineering do protocolo, não do nosso código
 - ⚠️ Sono e "stress" também não são suportados pela lib ainda
+
+## Área logada e demonstração
+
+- site público em `/`, login familiar sem senha em `/login` e app em `/app`;
+- acesso profissional em `/profissional/login` com Argon2 + TOTP;
+- sessão HttpOnly, CSRF, rate limit, consentimento, IDOR e auditoria;
+- GETs de leituras e POST do coletor exigem `X-API-Key`;
+- dados `demo-*` são sintéticos e sempre rotulados;
+- regras e mensagens são demonstrativas, sem validação clínica;
+- envio SMTP/WhatsApp fica desligado por padrão;
+- com `PUBLIC_EXPOSURE=1`, docs OpenAPI ficam desativadas.
+
+Use o Python 3.12 do ambiente validado e consulte
+`docs/PLANO_IMPLEMENTACAO.md`. Não abra ngrok antes dos portões descritos ali.
 
 ## Próximos passos sugeridos (pós-MVP)
 

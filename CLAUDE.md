@@ -237,3 +237,24 @@ confirmei via HTTP que a página responde 200.
   tracebacks) antes de sugerir mudanças grandes de arquitetura.
 - Este é um MVP, não uma migração de arquitetura — mudanças devem ser
   incrementais sobre o que já existe, a menos que o usuário peça o contrário.
+
+## Área logada e demonstração
+
+A arquitetura atual serve site, login e app no mesmo FastAPI: `/`, `/login`,
+`/profissional/login` e `/app`. O novo código fica em `webapp/`; HTMX, CSS,
+fontes e logos são locais. Família usa link/código; profissionais usam senha
+Argon2 e TOTP. Toda rota de paciente exige vínculo e, para profissionais,
+consentimento vigente. Acesso profissional ao detalhe gera `access_log`.
+
+Os GETs `/readings/latest` e `/readings/history` também exigem `X-API-Key`.
+Quando `PUBLIC_EXPOSURE=1`, OpenAPI fica indisponível. Somente a porta 8000
+pode entrar em túnel; Streamlit deve usar `--server.address 127.0.0.1`.
+
+Dispositivos `demo-*` recebem apenas leituras sintéticas e devem conservar o
+rótulo “dados fictícios”. Regras/limiares não são clinicamente validados.
+Nunca registrar valor de saúde, token, mensagem ou destino de notificação.
+SMTP e WhatsApp permanecem desligados salvo configuração + opt-in verificado.
+
+O controle de processo BLE vive em `collector_control.py` e é compartilhado
+pelo Streamlit e web. Nunca iniciar um segundo coletor em paralelo. A sequência,
+evidências e portões manuais estão em `docs/PLANO_IMPLEMENTACAO.md`.
