@@ -352,19 +352,19 @@ Testes obrigatórios:
 
 ### Fase 8 — Atualização sob demanda e coletor compartilhado
 
-Status: `[ ]`
+Status: `[x]`
 
 Objetivo: integrar solicitações web ao coletor sem criar concorrência BLE.
 
 Tarefas:
 
-- [ ] Extrair o controle de PID para módulo compartilhado sem quebrar Streamlit.
-- [ ] Impedir duas coletas BLE simultâneas.
-- [ ] Registrar `refresh_request` com estado e expiração.
-- [ ] Fazer polling HTMX sem incluir dado de saúde na URL.
-- [ ] Responder em poucos segundos no modo sintético.
-- [ ] Preparar timeout de 120 segundos para o anel físico.
-- [ ] Separar modo local de uma futura arquitetura com coletor remoto.
+- [x] Extrair o controle de PID para módulo compartilhado sem quebrar Streamlit.
+- [x] Impedir duas coletas BLE simultâneas.
+- [x] Registrar `refresh_request` com estado e expiração.
+- [x] Fazer polling HTMX sem incluir dado de saúde na URL.
+- [x] Responder em poucos segundos no modo sintético.
+- [x] Preparar timeout de 120 segundos para o anel físico.
+- [x] Separar modo local de uma futura arquitetura com coletor remoto.
 
 Testes obrigatórios:
 
@@ -704,4 +704,19 @@ Evidências: commits b856789 e e007881; docs/MEDICO.md.
 Pendências/riscos: execução do coletor, polling e timeout do pedido entram
 na Fase 8; rotação de SESSION_SECRET exige reprovisionar TOTP.
 Próximo passo: Fase 8 — atualização sob demanda e coletor compartilhado.
+```
+
+### 2026-09-21 — Fase 8 concluída
+
+```text
+Data/hora: 2026-09-21
+Fase: 8 — Atualização sob demanda e coletor compartilhado
+Alterações: controle de processo compartilhado; trava BLE atômica; pedido
+idempotente; polling HTMX; conclusão por leitura nova; timeout de 120 segundos.
+Comandos executados: py_compile do dashboard/controle; pytest; git diff --check.
+Resultados: 76 testes passaram; duplo clique mantém um pedido ativo; coletor
+contínuo bloqueia --once; timeout informa sem resposta e não cria alerta.
+Evidências: commits 2049ed8 e 616b951; docs/COLETOR.md.
+Pendências/riscos: BLE físico permanece reservado ao portão manual da Fase 12.
+Próximo passo: Fase 9 — simulador e regras demonstrativas.
 ```
