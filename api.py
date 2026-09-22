@@ -25,6 +25,7 @@ from webapp.routes.cliente import router as client_router
 from webapp.routes.login import router as login_router
 from webapp.routes.medico import router as doctor_router
 from webapp.routes.professional_login import router as professional_login_router
+from webapp.routes.simulador import router as simulator_router
 from webapp.routes.tecnico import router as technician_router
 
 API_KEY = os.environ.get("API_KEY", "")
@@ -143,6 +144,7 @@ app.include_router(professional_login_router)
 app.include_router(client_router)
 app.include_router(technician_router)
 app.include_router(doctor_router)
+app.include_router(simulator_router)
 app.include_router(app_api_router)
 app.mount("/static", StaticFiles(directory="static"), name="app-static")
 app.mount("/design", StaticFiles(directory="site/design"), name="design-system")
