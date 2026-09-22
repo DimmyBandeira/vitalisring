@@ -183,3 +183,30 @@ class RecoveryCode(Base):
     code_hash = Column(String, unique=True, index=True, nullable=False)
     used_at = Column(DateTime, nullable=True)
     created_at = Column(DateTime, default=utcnow, nullable=False)
+
+
+class NotificationPreference(Base):
+    __tablename__ = "notification_preferences"
+    __table_args__ = (UniqueConstraint("user_id", "patient_id", "channel", name="uq_notification_preference"),)
+
+    id = Column(String, primary_key=True, default=new_id)
+    user_id = Column(String, ForeignKey("users.id"), index=True, nullable=False)
+    patient_id = Column(String, ForeignKey("patients.id"), index=True, nullable=False)
+    channel = Column(String, nullable=False)
+    destination = Column(String, nullable=False)
+    opted_in = Column(Boolean, default=False, nullable=False)
+    verified_at = Column(DateTime, nullable=True)
+    created_at = Column(DateTime, default=utcnow, nullable=False)
+
+
+class NotificationAttempt(Base):
+    __tablename__ = "notification_attempts"
+
+    id = Column(String, primary_key=True, default=new_id)
+    idempotency_key = Column(String, unique=True, index=True, nullable=False)
+    patient_id = Column(String, ForeignKey("patients.id"), index=True, nullable=False)
+    user_id = Column(String, ForeignKey("users.id"), index=True, nullable=False)
+    channel = Column(String, nullable=False)
+    status = Column(String, index=True, nullable=False)
+    error_code = Column(String, nullable=True)
+    created_at = Column(DateTime, default=utcnow, nullable=False)
