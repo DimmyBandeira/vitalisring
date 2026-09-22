@@ -6,20 +6,17 @@ Rodar com: streamlit run dashboard.py --server.port 8501
 """
 
 import json
-import subprocess
-import sys
 import time
 from datetime import datetime, timedelta
 from pathlib import Path
 
 import pandas as pd
-import psutil
 import streamlit as st
 
+from collector_control import collect_once, get_running_pid, start_collector, stop_collector
 from models import Reading, SessionLocal
 
 PROJECT_DIR = Path(__file__).parent
-PID_FILE = PROJECT_DIR / "collector.pid"
 STATUS_FILE = PROJECT_DIR / "ring_status.json"
 
 
@@ -31,47 +28,6 @@ def get_ring_status() -> dict | None:
         return json.loads(STATUS_FILE.read_text())
     except (ValueError, OSError):
         return None
-
-
-def get_running_pid() -> int | None:
-    """Verifica se há um collector.py em loop contínuo rodando, via arquivo de PID."""
-    if not PID_FILE.exists():
-        return None
-    try:
-        pid = int(PID_FILE.read_text().strip())
-    except ValueError:
-        PID_FILE.unlink(missing_ok=True)
-        return None
-    if psutil.pid_exists(pid):
-        try:
-            if "collector.py" in " ".join(psutil.Process(pid).cmdline()):
-                return pid
-        except psutil.Error:
-            pass
-    PID_FILE.unlink(missing_ok=True)
-    return None
-
-
-def start_collector() -> None:
-    if get_running_pid():
-        return
-    proc = subprocess.Popen([sys.executable, "collector.py"], cwd=PROJECT_DIR)
-    PID_FILE.write_text(str(proc.pid))
-
-
-def stop_collector() -> None:
-    pid = get_running_pid()
-    if not pid:
-        return
-    try:
-        psutil.Process(pid).terminate()
-    except psutil.Error:
-        pass
-    PID_FILE.unlink(missing_ok=True)
-
-
-def collect_once() -> None:
-    subprocess.Popen([sys.executable, "collector.py", "--once"], cwd=PROJECT_DIR)
 
 
 st.set_page_config(page_title="Painel do Anel", page_icon="💓", layout="wide")
