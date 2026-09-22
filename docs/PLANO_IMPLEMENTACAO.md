@@ -376,19 +376,19 @@ Testes obrigatórios:
 
 ### Fase 9 — Simulador e regras demonstrativas
 
-Status: `[ ]`
+Status: `[x]`
 
 Objetivo: demonstrar a escala e as mensagens sem afirmar validação clínica.
 
 Tarefas:
 
-- [ ] Implementar regras como funções puras e configuráveis.
-- [ ] Incluir no simulador estado, duração, movimento e qualidade sintética.
-- [ ] Manter limiares em arquivo único com aviso de validação pendente.
-- [ ] Mostrar a regra acionada em linguagem simples.
-- [ ] Gerar prévia exata de WhatsApp e e-mail sem números de saúde.
-- [ ] Restringir regras automáticas a dados sintéticos.
-- [ ] Não apresentar movimento, sono, queda, HRV ou qualidade como leitura real.
+- [x] Implementar regras como funções puras e configuráveis.
+- [x] Incluir no simulador estado, duração, movimento e qualidade sintética.
+- [x] Manter limiares em arquivo único com aviso de validação pendente.
+- [x] Mostrar a regra acionada em linguagem simples.
+- [x] Gerar prévia exata de WhatsApp e e-mail sem números de saúde.
+- [x] Restringir regras automáticas a dados sintéticos.
+- [x] Não apresentar movimento, sono, queda, HRV ou qualidade como leitura real.
 
 Testes obrigatórios:
 
@@ -719,4 +719,19 @@ contínuo bloqueia --once; timeout informa sem resposta e não cria alerta.
 Evidências: commits 2049ed8 e 616b951; docs/COLETOR.md.
 Pendências/riscos: BLE físico permanece reservado ao portão manual da Fase 12.
 Próximo passo: Fase 9 — simulador e regras demonstrativas.
+```
+
+### 2026-09-21 — Fase 9 concluída
+
+```text
+Data/hora: 2026-09-21
+Fase: 9 — Simulador e regras demonstrativas
+Alterações: funções puras; limiares centralizados; bloqueio de dado real;
+simulador profissional; explicação simples e prévias sem valores de saúde.
+Comandos executados: pytest completo; git diff --check.
+Resultados: 96 testes passaram; limites e durações cobertos; baixa qualidade
+não conclui; UI explicita simulação e validação clínica pendente.
+Evidências: commits acaaf2b e dfc77da; docs/SIMULADOR.md.
+Pendências/riscos: regras não possuem validação clínica e permanecem demo-only.
+Próximo passo: Fase 10 — canais de notificação.
 ```
