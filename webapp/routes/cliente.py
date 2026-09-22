@@ -6,7 +6,8 @@ from fastapi import APIRouter, Depends, Form, HTTPException, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy.orm import Session
 
-from models import utcnow_naive
+from collector_control import collect_once
+from models import Reading, utcnow_naive
 from webapp.routes.common import templates
 from webapp.models_app import CareLink, Consent, Device, RefreshRequest, User
 from webapp.security.audit import record_action
@@ -101,8 +102,30 @@ def refresh_patient(
         pending.status = "completed"
         pending.completed_at = utcnow_naive()
         db.commit()
+    elif device.source == "physical" and pending.status == "pending":
+        collect_once()
     target = "/app/medico" if user.role in {"doctor", "institution", "owner"} else "/app"
     return RedirectResponse(target, status_code=303)
+
+
+@router.get("/app/pedidos/{request_id}", response_class=HTMLResponse)
+def refresh_status(request_id: str, request: Request, db: Session = Depends(get_db)):
+    _session, user = authenticated_context(request, db)
+    pending = db.get(RefreshRequest, request_id)
+    if pending is None:
+        raise HTTPException(status_code=404, detail="Pedido não encontrado")
+    authorize_patient(db, user, pending.patient_id)
+    device = db.get(Device, pending.device_id)
+    now = utcnow_naive()
+    if pending.status == "pending" and device:
+        arrived = db.query(Reading).filter(Reading.device_id == device.device_id, Reading.timestamp > pending.requested_at).first()
+        if arrived:
+            pending.status, pending.completed_at = "completed", now
+            db.commit()
+        elif pending.expires_at <= now:
+            pending.status = "timeout"
+            db.commit()
+    return templates.TemplateResponse(request=request, name="partials/refresh_status.html", context={"refresh": pending})
 
 
 @router.post("/app/pacientes/{patient_id}/destinatarios/{recipient_id}")

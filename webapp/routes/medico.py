@@ -5,7 +5,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy.orm import Session
 
 from models import Reading
-from webapp.models_app import Alert, CareLink, Device
+from webapp.models_app import Alert, CareLink, Device, RefreshRequest
 from webapp.routes.common import templates
 from webapp.security.audit import record_patient_access
 from webapp.security.authorization import authorize_patient
@@ -67,4 +67,5 @@ def detail(patient_id: str, request: Request, db: Session = Depends(get_db)):
     heart = [item for item in reversed(readings) if item.type == "heart_rate"]
     points = " ".join(f"{10 + index * (280 / max(1, len(heart) - 1)):.1f},{90 - min(70, max(0, item.value - 40))}" for index, item in enumerate(heart))
     key, label = _patient_status(db, patient.id)
-    return templates.TemplateResponse(request=request, name="doctor_patient.html", context={"page_title": f"{patient.display_name} | Vitalis Ring", "patient": patient, "device": device, "readings": readings, "points": points, "status_key": key, "status_label": label, "local_datetime": local_datetime, "csrf_token": request.cookies.get(CSRF_COOKIE_NAME, "")})
+    refresh = db.query(RefreshRequest).filter(RefreshRequest.patient_id == patient.id).order_by(RefreshRequest.requested_at.desc()).first()
+    return templates.TemplateResponse(request=request, name="doctor_patient.html", context={"page_title": f"{patient.display_name} | Vitalis Ring", "patient": patient, "device": device, "readings": readings, "points": points, "status_key": key, "status_label": label, "local_datetime": local_datetime, "csrf_token": request.cookies.get(CSRF_COOKIE_NAME, ""), "refresh": refresh})

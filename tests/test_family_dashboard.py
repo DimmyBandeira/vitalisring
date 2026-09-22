@@ -1,6 +1,6 @@
 """Painel familiar, isolamento de paciente e atualização sintética."""
 
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 import pytest
 from fastapi.testclient import TestClient
@@ -55,6 +55,7 @@ def family_context():
     db.commit()
     session = create_session(db, user)
     result = {
+        "user_id": user.id,
         "patient_id": patient.id,
         "other_id": other.id,
         "device_id": device.device_id,
@@ -223,3 +224,26 @@ def test_missing_readings_and_offline_physical_device_are_calm(client, family_co
     assert "ainda sem leitura" in response.text
     assert "Coletor sem comunicação com o anel" in response.text
     assert "Sem leitura" in response.text
+
+
+def test_refresh_poll_times_out_calmly(client, family_context):
+    db = SessionLocal()
+    now = utcnow_naive()
+    refresh = RefreshRequest(
+        patient_id=family_context["patient_id"],
+        device_id=family_context["device_pk"],
+        requested_by=family_context["user_id"],
+        status="pending",
+        requested_at=now + timedelta(seconds=1),
+        expires_at=now - timedelta(seconds=1),
+    )
+    db.add(refresh)
+    db.commit()
+    request_id = refresh.id
+    db.close()
+
+    response = client.get(f"/app/pedidos/{request_id}")
+
+    assert response.status_code == 200
+    assert "Sem resposta do anel" in response.text
+    assert "hx-get" not in response.text

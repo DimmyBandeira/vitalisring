@@ -9,7 +9,7 @@ from zoneinfo import ZoneInfo
 from sqlalchemy.orm import Session
 
 from models import Reading, utcnow_naive
-from webapp.models_app import Alert, CareLink, Consent, Device, Patient, User
+from webapp.models_app import Alert, CareLink, Consent, Device, Patient, RefreshRequest, User
 
 
 SAO_PAULO = ZoneInfo("America/Sao_Paulo")
@@ -41,6 +41,7 @@ class DashboardState:
     alerts: list[Alert]
     recipients: list[dict]
     ring_connected: bool | None
+    refresh_request: RefreshRequest | None
 
 
 def local_datetime(value):
@@ -169,4 +170,5 @@ def load_family_dashboard(db: Session, user: User) -> DashboardState | None:
         alerts=alerts,
         recipients=recipients,
         ring_connected=_ring_connected(device),
+        refresh_request=(db.query(RefreshRequest).filter(RefreshRequest.patient_id == patient.id).order_by(RefreshRequest.requested_at.desc()).first()),
     )
