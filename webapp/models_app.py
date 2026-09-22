@@ -161,3 +161,25 @@ class RateLimitBucket(Base):
     scope = Column(String, index=True, nullable=False)
     window_started_at = Column(DateTime, nullable=False)
     count = Column(Integer, default=0, nullable=False)
+
+
+class ProfessionalLoginChallenge(Base):
+    __tablename__ = "professional_login_challenges"
+
+    id = Column(String, primary_key=True, default=new_id)
+    user_id = Column(String, ForeignKey("users.id"), index=True, nullable=False)
+    token_hash = Column(String, unique=True, index=True, nullable=False)
+    expires_at = Column(DateTime, index=True, nullable=False)
+    attempts = Column(Integer, default=0, nullable=False)
+    used_at = Column(DateTime, nullable=True)
+    created_at = Column(DateTime, default=utcnow, nullable=False)
+
+
+class RecoveryCode(Base):
+    __tablename__ = "recovery_codes"
+
+    id = Column(String, primary_key=True, default=new_id)
+    user_id = Column(String, ForeignKey("users.id"), index=True, nullable=False)
+    code_hash = Column(String, unique=True, index=True, nullable=False)
+    used_at = Column(DateTime, nullable=True)
+    created_at = Column(DateTime, default=utcnow, nullable=False)
