@@ -3,9 +3,47 @@
 import pytest
 
 from models import SessionLocal, init_db
+from tools.configure_smtp import ConfigurationError, smtp_updates, update_env_text
 from tools.provision_demo_doctor import ProvisionError, create_demo_doctor
 from tools.provision_technician import valid_password
 from webapp.models_app import CareLink, Consent, Patient
+
+
+def test_smtp_env_update_replaces_keys_without_duplicates():
+    original = "ENV=dev\nMAILER=console\nSMTP_HOST=old.example\nMAILER=console\n"
+    updates = smtp_updates(
+        host="smtp.gmail.com",
+        port="587",
+        user="Sender@Example.com",
+        password="app-password-test",
+        sender="Sender@Example.com",
+    )
+
+    result = update_env_text(original, updates)
+
+    assert result.count("MAILER=smtp") == 1
+    assert "MAILER=console" not in result
+    assert result.count("SMTP_HOST=smtp.gmail.com") == 1
+    assert "SMTP_USER=sender@example.com" in result
+    assert "SMTP_PASSWORD=app-password-test" in result
+    assert result.startswith("ENV=dev\n")
+
+
+@pytest.mark.parametrize(
+    ("field", "value"),
+    [("host", "smtp.example.com\nBAD=1"), ("port", "70000"), ("user", "not-an-email")],
+)
+def test_smtp_configuration_rejects_invalid_values(field, value):
+    values = {
+        "host": "smtp.example.com",
+        "port": "587",
+        "user": "sender@example.com",
+        "password": "app-password-test",
+        "sender": "sender@example.com",
+    }
+    values[field] = value
+    with pytest.raises(ConfigurationError):
+        smtp_updates(**values)
 
 
 def test_technician_password_policy():

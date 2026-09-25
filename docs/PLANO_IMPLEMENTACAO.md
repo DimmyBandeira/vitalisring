@@ -449,7 +449,7 @@ Aceite:
 
 ### Fase 12 — PORTÃO MANUAL: ativação com o anel físico
 
-Status: `[ ]`
+Status: `[~]`
 
 Esta fase só começa quando o usuário estiver com o anel por perto e autorizar o
 teste. Nenhuma etapa anterior depende dela.
@@ -766,4 +766,23 @@ Evidências: commit 85b647b; docs/TESTES.md e docs/BACKUP.md.
 Pendências/riscos: Chrome controlado bloqueou POST localhost; POSTs foram
 cobertos por ASGI. BLE, SMTP, WhatsApp e ngrok não foram acionados.
 Próximo passo: Fase 12 — portão manual com o anel e o usuário.
+```
+
+### 2026-09-25 — Fase 12 em andamento: configuração segura de e-mail
+
+```text
+Data/hora: 2026-09-25
+Fase: 12 — portão manual com o anel e o usuário
+Alterações: assistente interativo para SMTP no .env ignorado pelo Git;
+validação de entradas; gravação atômica; TLS com contexto seguro; instruções
+para senha de aplicativo do Gmail.
+Comandos executados: py_compile; pytest focado; pytest completo.
+Resultados: 12 testes focados e 111 testes totais passaram; um aviso de
+depreciação conhecido do TestClient permaneceu sem impacto.
+Evidências: testes da atualização sem duplicidade e rejeição de valores
+inválidos; credencial não passa pela linha de comando nem pelo Git.
+Pendências/riscos: autenticação e entrega SMTP reais dependem da senha de
+aplicativo informada localmente pelo usuário; BLE físico segue sem nova evidência.
+Próximo passo: configurar a conta local, reiniciar a API e comprovar o recebimento
+do link de login antes de validar o console médico.
 ```

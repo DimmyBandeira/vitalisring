@@ -35,8 +35,16 @@ SMTP_PASSWORD=
 MAIL_FROM=
 ```
 
-Envio SMTP real não foi validado e permanecerá desligado até uma fase própria de
-integração externa.
+Para configurar sem colocar a credencial no histórico do terminal, execute:
+
+```powershell
+& $env:VITALIS_PYTHON -m tools.configure_smtp
+```
+
+No Gmail, use uma senha de aplicativo da conta com verificação em duas etapas;
+nunca use a senha normal. A ferramenta grava a configuração somente no `.env`,
+que é ignorado pelo Git. Reinicie a API depois da alteração. A autenticação
+SMTP e a entrega real ainda precisam ser comprovadas com a conta escolhida.
 
 ## Cookies
 

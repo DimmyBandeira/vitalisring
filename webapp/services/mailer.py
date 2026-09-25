@@ -3,6 +3,7 @@
 import logging
 import os
 import smtplib
+import ssl
 from dataclasses import dataclass
 from email.message import EmailMessage
 from typing import Protocol
@@ -49,7 +50,7 @@ class SMTPMailer:
             "Se você não solicitou este acesso, ignore esta mensagem."
         )
         with smtplib.SMTP(self.host, self.port, timeout=15) as smtp:
-            smtp.starttls()
+            smtp.starttls(context=ssl.create_default_context())
             if self.user:
                 smtp.login(self.user, self.password)
             smtp.send_message(message)
