@@ -17,7 +17,8 @@ from pydantic import BaseModel
 
 load_dotenv()
 
-from models import Reading, SessionLocal, init_db
+from models import Reading, SessionLocal, init_db, utcnow_naive
+from webapp.models_app import Device, RefreshRequest
 from webapp.security.config import env_flag, validate_demo_mode, validate_public_exposure
 from webapp.security.headers import install_security_headers
 from webapp.routes.api_app import router as app_api_router
@@ -79,6 +80,29 @@ def post_readings(payload: BulkReadingsIn, x_api_key: str | None = Header(defaul
                 value=r.value,
                 timestamp=r.timestamp.replace(tzinfo=None),
             ))
+        physical_ids = {reading.device_id for reading in payload.readings}
+        if physical_ids:
+            now = utcnow_naive()
+            devices = (
+                db.query(Device)
+                .filter(Device.device_id.in_(physical_ids), Device.source == "physical")
+                .all()
+            )
+            for device in devices:
+                if device.status != "active":
+                    device.status = "active"
+                    device.activated_at = device.activated_at or now
+                (
+                    db.query(RefreshRequest)
+                    .filter(
+                        RefreshRequest.device_id == device.id,
+                        RefreshRequest.status == "pending",
+                    )
+                    .update(
+                        {"status": "complete", "completed_at": now},
+                        synchronize_session=False,
+                    )
+                )
         db.commit()
         return {"status": "ok", "count": len(payload.readings)}
     finally:

@@ -4,6 +4,9 @@ from fastapi.testclient import TestClient
 import pytest
 
 import api
+from models import SessionLocal, init_db
+from webapp.models_app import Device, Patient, RefreshRequest, User
+from webapp.security.professional_auth import hash_password
 from webapp.security.config import validate_public_exposure
 
 
@@ -55,6 +58,65 @@ def test_bulk_contract_still_requires_the_same_header(client):
     assert anonymous.status_code == 401
     assert authenticated.status_code == 200
     assert authenticated.json() == {"status": "ok", "count": 0}
+
+
+def test_bulk_physical_reading_activates_registered_device_and_refresh(client):
+    init_db()
+    db = SessionLocal()
+    technician = User(
+        email="activation-tech@example.test",
+        full_name="Técnico de ativação",
+        role="technician",
+        password_hash=hash_password("Senha-forte-123"),
+    )
+    patient = Patient(display_name="Ativação física")
+    db.add_all([technician, patient])
+    db.flush()
+    device = Device(
+        device_id="physical-activation-test",
+        patient_id=patient.id,
+        source="physical",
+        status="pending",
+        registered_by=technician.id,
+    )
+    db.add(device)
+    db.flush()
+    refresh = RefreshRequest(
+        patient_id=patient.id,
+        device_id=device.id,
+        requested_by=technician.id,
+        status="pending",
+        expires_at=api.utcnow_naive() + api.timedelta(minutes=2),
+    )
+    db.add(refresh)
+    db.commit()
+    device_id, refresh_id = device.id, refresh.id
+    db.close()
+
+    response = client.post(
+        "/readings/bulk",
+        json={
+            "readings": [
+                {
+                    "device_id": "physical-activation-test",
+                    "type": "battery",
+                    "value": 80,
+                    "timestamp": "2026-09-25T12:00:00Z",
+                }
+            ]
+        },
+        headers=AUTH_HEADERS,
+    )
+
+    assert response.status_code == 200
+    db = SessionLocal()
+    activated = db.get(Device, device_id)
+    completed = db.get(RefreshRequest, refresh_id)
+    assert activated.status == "active"
+    assert activated.activated_at is not None
+    assert completed.status == "complete"
+    assert completed.completed_at is not None
+    db.close()
 
 
 def test_public_exposure_hides_openapi(client):
