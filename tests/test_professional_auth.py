@@ -20,10 +20,10 @@ from webapp.security.sessions import COOKIE_NAME, CSRF_COOKIE_NAME, create_sessi
 PASSWORD = "Senha-profissional-123"
 
 
-def _doctor(email="medica@example.test"):
+def _doctor(email="medica@example.test", role="doctor"):
     init_db()
     db = SessionLocal()
-    user = User(email=email, full_name="Dra. Teste", role="doctor", is_demo=True, password_hash=hash_password(PASSWORD))
+    user = User(email=email, full_name="Dra. Teste", role=role, is_demo=True, password_hash=hash_password(PASSWORD))
     db.add(user)
     db.commit()
     db.refresh(user)
@@ -109,6 +109,28 @@ def test_wrong_totp_does_not_create_session_and_recovery_is_single_use():
         page = client.get("/profissional/mfa")
         reused = client.post("/profissional/mfa", data={"code": recovery, "csrf_token": _csrf(page)}, headers={"Origin": "http://testserver"})
         assert "Código inválido" in reused.text
+
+
+def test_technician_second_factor_redirects_to_technical_console():
+    email = "tecnico-forte@example.test"
+    user_id = _doctor(email, role="technician")
+    db = SessionLocal()
+    user = db.get(User, user_id)
+    ensure_totp(user, db)
+    recovery = create_recovery_codes(db, user)[0]
+    db.close()
+    with TestClient(api.app) as client:
+        password = _password_step(client, email=email)
+        assert password.headers["location"] == "/profissional/mfa"
+        page = client.get("/profissional/mfa")
+        accepted = client.post(
+            "/profissional/mfa",
+            data={"code": recovery, "csrf_token": _csrf(page)},
+            headers={"Origin": "http://testserver"},
+            follow_redirects=False,
+        )
+    assert accepted.status_code == 303
+    assert accepted.headers["location"] == "/app/tecnico"
 
 
 def test_console_requires_link_and_live_consent_and_audits_view():

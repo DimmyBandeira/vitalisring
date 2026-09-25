@@ -55,7 +55,8 @@ def _finish(request: Request, db: Session, user: User, challenge, recovery_codes
             context={"page_title": "Códigos de recuperação | Vitalis Ring", "codes": recovery_codes},
         )
     else:
-        response = RedirectResponse("/app/medico", status_code=303)
+        target = "/app/tecnico" if user.role in {"technician", "owner"} else "/app/medico"
+        response = RedirectResponse(target, status_code=303)
     set_session_cookies(response, session)
     response.delete_cookie(CHALLENGE_COOKIE, path="/profissional")
     return response
