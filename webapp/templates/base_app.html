@@ -7,7 +7,7 @@
   <meta name="theme-color" content="#FCF8EE">
   <title>{{ page_title }}</title>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="/static/app.css">
+  <link rel="stylesheet" href="/static/app.css?v=12.1">
   <script src="/static/vendor/htmx.min.js" defer></script>
 </head>
 <body class="app-body">
@@ -18,7 +18,7 @@
     </a>
     <a class="app-back" href="/">Voltar ao site</a>
   </header>
-  <main class="app-main" id="conteudo">
+  <main class="app-main {% block main_class %}{% endblock %}" id="conteudo">
     {% block content %}{% endblock %}
   </main>
   <footer class="app-disclaimer">

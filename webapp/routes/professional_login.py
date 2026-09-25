@@ -48,14 +48,18 @@ def _set_challenge(response, token: str):
 def _finish(request: Request, db: Session, user: User, challenge, recovery_codes=None):
     consume_challenge(db, challenge)
     session = create_session(db, user)
+    target = "/app/tecnico" if user.role in {"technician", "owner"} else "/app/medico"
     if recovery_codes:
         response = templates.TemplateResponse(
             request=request,
             name="professional_recovery.html",
-            context={"page_title": "Códigos de recuperação | Vitalis Ring", "codes": recovery_codes},
+            context={
+                "page_title": "Códigos de recuperação | Vitalis Ring",
+                "codes": recovery_codes,
+                "console_target": target,
+            },
         )
     else:
-        target = "/app/tecnico" if user.role in {"technician", "owner"} else "/app/medico"
         response = RedirectResponse(target, status_code=303)
     set_session_cookies(response, session)
     response.delete_cookie(CHALLENGE_COOKIE, path="/profissional")

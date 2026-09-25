@@ -1,1 +1,34 @@
-{% extends "base_app.html" %}{% block content %}<section class="auth-card"><p class="app-eyebrow">Acesso profissional</p><h1>Entrar com senha</h1><p>Para médicos, instituições e equipe autorizada.</p>{% if error %}<p role="alert">{{ error }}</p>{% endif %}<form method="post" action="/profissional/login"><input type="hidden" name="csrf_token" value="{{ login_csrf }}"><label for="email">E-mail</label><input id="email" name="email" type="email" autocomplete="username" required><label for="password">Senha</label><input id="password" name="password" type="password" autocomplete="current-password" required><button class="vr-btn vr-btn--primary" type="submit">Continuar</button></form><p><a href="/login">Acesso da família</a></p></section>{% endblock %}
+{% extends "base_app.html" %}
+{% block main_class %}app-main--professional{% endblock %}
+{% block content %}
+<section class="professional-auth" aria-labelledby="professional-login-title">
+  <div class="professional-auth__intro">
+    <span class="professional-auth__mark" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="28" height="28"><path d="M12 3a5 5 0 0 0-5 5v2H5v11h14V10h-2V8a5 5 0 0 0-5-5Zm-3 7V8a3 3 0 1 1 6 0v2H9Zm3 3a2 2 0 0 1 1 3.73V18h-2v-1.27A2 2 0 0 1 12 13Z" fill="currentColor"/></svg>
+    </span>
+    <p class="app-eyebrow">Portal profissional</p>
+    <h1 id="professional-login-title">Cuidado conectado.<br>Acesso protegido.</h1>
+    <p class="professional-auth__lead">Um ambiente reservado para a equipe que acompanha cada implantação Vitalis.</p>
+    <ul class="professional-auth__benefits">
+      <li><span aria-hidden="true">✓</span> Acesso individual e auditado</li>
+      <li><span aria-hidden="true">✓</span> Dupla verificação obrigatória</li>
+      <li><span aria-hidden="true">✓</span> Dados visíveis somente com autorização</li>
+    </ul>
+  </div>
+  <div class="professional-auth__panel">
+    <p class="professional-auth__secure"><span aria-hidden="true">●</span> Ambiente seguro</p>
+    <h2>Bem-vindo de volta</h2>
+    <p class="app-help">Entre com as credenciais fornecidas pela Vitalis.</p>
+    {% if error %}<p class="form-error" role="alert">{{ error }}</p>{% endif %}
+    <form class="app-form professional-auth__form" method="post" action="/profissional/login">
+      <input type="hidden" name="csrf_token" value="{{ login_csrf }}">
+      <label for="email">E-mail profissional</label>
+      <input id="email" name="email" type="email" autocomplete="username" placeholder="voce@empresa.com.br" required>
+      <label for="password">Senha</label>
+      <input id="password" name="password" type="password" autocomplete="current-password" placeholder="Digite sua senha" required>
+      <button class="vr-btn vr-btn--primary professional-auth__submit" type="submit">Continuar com segurança <span aria-hidden="true">→</span></button>
+    </form>
+    <p class="professional-auth__switch">Acompanhando um familiar? <a href="/login">Acesse a área da família</a></p>
+  </div>
+</section>
+{% endblock %}

@@ -1,1 +1,12 @@
-{% extends "base_app.html" %}{% block content %}<section class="auth-card"><p class="app-eyebrow">MFA ativado</p><h1>Guarde seus códigos de recuperação</h1><p>Eles aparecem somente agora e cada um funciona uma única vez.</p><ul class="recovery-codes">{% for code in codes %}<li><code>{{ code }}</code></li>{% endfor %}</ul><a class="vr-btn vr-btn--primary" href="/app/medico">Ir ao console</a></section>{% endblock %}
+{% extends "base_app.html" %}
+{% block main_class %}app-main--professional-step{% endblock %}
+{% block content %}
+<section class="auth-card professional-step professional-step--wide" aria-labelledby="recovery-title">
+  <span class="professional-step__icon professional-step__icon--ok" aria-hidden="true">✓</span>
+  <p class="app-eyebrow">MFA ativado</p>
+  <h1 id="recovery-title">Guarde seus códigos de recuperação</h1>
+  <p>Estes códigos aparecem somente agora. Guarde-os em um local seguro; cada um funciona uma única vez.</p>
+  <ul class="recovery-codes" aria-label="Códigos de recuperação">{% for code in codes %}<li><code>{{ code }}</code></li>{% endfor %}</ul>
+  <a class="vr-btn vr-btn--primary" href="{{ console_target }}">Ir ao meu painel</a>
+</section>
+{% endblock %}

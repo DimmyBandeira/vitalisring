@@ -133,6 +133,25 @@ def test_technician_second_factor_redirects_to_technical_console():
     assert accepted.headers["location"] == "/app/tecnico"
 
 
+def test_first_technician_access_recovery_leads_to_technical_console():
+    email = "tecnico-primeiro-acesso@example.test"
+    user_id = _doctor(email, role="technician")
+    with TestClient(api.app) as client:
+        password = _password_step(client, email=email)
+        setup = client.get(password.headers["location"])
+        db = SessionLocal()
+        user = db.get(User, user_id)
+        secret = decrypt_totp_secret(user.totp_secret_encrypted)
+        db.close()
+        confirmed = client.post(
+            "/profissional/configurar-mfa",
+            data={"code": pyotp.TOTP(secret).now(), "csrf_token": _csrf(setup)},
+            headers={"Origin": "http://testserver"},
+        )
+    assert confirmed.status_code == 200
+    assert 'href="/app/tecnico"' in confirmed.text
+
+
 def test_console_requires_link_and_live_consent_and_audits_view():
     user_id = _doctor("console@example.test")
     db = SessionLocal()

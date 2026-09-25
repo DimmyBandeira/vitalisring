@@ -1,1 +1,28 @@
-{% extends "base_app.html" %}{% block content %}<section class="auth-card"><p class="app-eyebrow">Proteção obrigatória</p><h1>Configure o autenticador</h1><p>Escaneie o QR no seu aplicativo autenticador. O SVG é gerado localmente.</p><div class="totp-qr">{{ qr_svg }}</div><details><summary>Não consegue escanear?</summary><code>{{ secret }}</code></details>{% if error %}<p role="alert">{{ error }}</p>{% endif %}<form method="post" action="/profissional/configurar-mfa"><input type="hidden" name="csrf_token" value="{{ login_csrf }}"><label for="code">Código de 6 dígitos</label><input id="code" name="code" inputmode="numeric" autocomplete="one-time-code" required><button class="vr-btn vr-btn--primary" type="submit">Ativar MFA</button></form></section>{% endblock %}
+{% extends "base_app.html" %}
+{% block main_class %}app-main--professional{% endblock %}
+{% block content %}
+<section class="professional-auth professional-auth--setup" aria-labelledby="setup-mfa-title">
+  <div class="professional-auth__intro">
+    <span class="professional-auth__step">Primeiro acesso</span>
+    <p class="app-eyebrow">Proteção obrigatória</p>
+    <h1 id="setup-mfa-title">Proteja sua conta em dois passos.</h1>
+    <p class="professional-auth__lead">Escaneie o QR Code no seu aplicativo autenticador. Ele é gerado localmente e não é enviado a terceiros.</p>
+    <ol class="professional-auth__steps">
+      <li><span>1</span> Abra seu aplicativo autenticador</li>
+      <li><span>2</span> Escaneie o QR Code ao lado</li>
+      <li><span>3</span> Digite o código gerado</li>
+    </ol>
+  </div>
+  <div class="professional-auth__panel professional-auth__panel--setup">
+    <div class="totp-qr" aria-label="QR Code para configurar o autenticador">{{ qr_svg }}</div>
+    <details class="professional-auth__secret"><summary>Não consegue escanear?</summary><p>Digite esta chave manualmente no autenticador:</p><code>{{ secret }}</code></details>
+    {% if error %}<p class="form-error" role="alert">{{ error }}</p>{% endif %}
+    <form class="app-form" method="post" action="/profissional/configurar-mfa">
+      <input type="hidden" name="csrf_token" value="{{ login_csrf }}">
+      <label for="code">Código de 6 dígitos</label>
+      <input class="code-input" id="code" name="code" inputmode="numeric" autocomplete="one-time-code" placeholder="000 000" required>
+      <button class="vr-btn vr-btn--primary" type="submit">Ativar proteção</button>
+    </form>
+  </div>
+</section>
+{% endblock %}
