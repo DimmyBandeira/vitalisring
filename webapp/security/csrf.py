@@ -10,6 +10,7 @@ from webapp.security.sessions import session_secret
 
 
 LOGIN_CSRF_COOKIE = "vr_login_csrf"
+LOCAL_ORIGINS = {"http://localhost:8000", "http://127.0.0.1:8000"}
 
 
 def normalized_origin(value: str) -> str:
@@ -45,13 +46,20 @@ def issue_login_csrf() -> tuple[str, str]:
     return raw_token, token_hash(raw_token, session_secret())
 
 
+def configured_origins() -> set[str]:
+    origins = {os.environ.get("PUBLIC_BASE_URL", "")}
+    if os.environ.get("ENV", "dev").strip().lower() in {"dev", "test"}:
+        origins.update(LOCAL_ORIGINS)
+    return origins
+
+
 def validate_login_csrf(request: Request, supplied_token: str | None) -> bool:
     expected_hash = request.cookies.get(LOGIN_CSRF_COOKIE, "")
     return bool(expected_hash) and validate_csrf(
         supplied_token=supplied_token,
         expected_hash=expected_hash,
         origin=request.headers.get("Origin"),
-        allowed_origins={os.environ.get("PUBLIC_BASE_URL", "")},
+        allowed_origins=configured_origins(),
         secret=session_secret(),
     )
 
@@ -65,6 +73,6 @@ def validate_session_csrf(
         supplied_token=supplied_token or request.headers.get("X-CSRF-Token"),
         expected_hash=expected_hash,
         origin=request.headers.get("Origin"),
-        allowed_origins={os.environ.get("PUBLIC_BASE_URL", "")},
+        allowed_origins=configured_origins(),
         secret=session_secret(),
     )

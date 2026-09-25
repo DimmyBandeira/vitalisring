@@ -9,7 +9,7 @@ import api
 from models import SessionLocal, init_db, utcnow_naive
 from webapp.models_app import AccessLog, CareLink, Consent, Patient, User
 from webapp.security.crypto import token_hash
-from webapp.security.csrf import validate_csrf
+from webapp.security.csrf import configured_origins, validate_csrf
 from webapp.security.sessions import COOKIE_NAME, create_session, session_secret
 
 
@@ -218,3 +218,13 @@ def test_csrf_requires_exact_origin_and_matching_token():
         origin="https://demo.vitalis.test",
         **arguments,
     )
+
+
+def test_csrf_accepts_fixed_local_aliases_only_in_local_environments(monkeypatch):
+    monkeypatch.setenv("PUBLIC_BASE_URL", "https://demo.vitalis.test")
+    monkeypatch.setenv("ENV", "dev")
+    assert "http://localhost:8000" in configured_origins()
+    assert "http://127.0.0.1:8000" in configured_origins()
+
+    monkeypatch.setenv("ENV", "prod")
+    assert configured_origins() == {"https://demo.vitalis.test"}
