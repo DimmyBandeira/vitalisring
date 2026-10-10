@@ -9,11 +9,16 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 ROOT = os.path.dirname(os.path.abspath(__file__))
 DIST = os.path.join(ROOT, "dist")
 PACK = os.environ.get("PACK_DIR", ROOT)
-SITE_URL = os.environ.get("SITE_URL", "https://vitalisring.com.br").rstrip("/")
+SITE_URL = (
+    os.environ.get("SITE_URL")
+    or os.environ.get("CF_PAGES_URL")
+    or "https://vitalisring.com.br"
+).rstrip("/")
 APP_URL = os.environ.get("APP_URL", "").rstrip("/")
-WA_NUMBER = os.environ.get("WHATSAPP_NUMBER", "5521981918090")  # NÚMERO DE TESTE — trocar antes do lançamento
+SHOW_APP_LINK = bool(APP_URL) or os.environ.get("CF_PAGES") != "1"
+WA_NUMBER = os.environ.get("WHATSAPP_NUMBER", "").strip()
 WA_MSG = os.environ.get("WHATSAPP_MESSAGE", "Olá! Gostaria de saber mais sobre o Vitalis Ring.")
-WA_LINK = f"https://wa.me/{WA_NUMBER}?text={urllib.parse.quote(WA_MSG)}"
+WA_LINK = f"https://wa.me/{WA_NUMBER}?text={urllib.parse.quote(WA_MSG)}" if WA_NUMBER else ""
 
 NAV = [{"href": "/para-familias/", "label": "Famílias"}, {"href": "/para-medicos/", "label": "Médicos"},
        {"href": "/para-instituicoes/", "label": "Instituições"}, {"href": "/como-funciona/", "label": "Como funciona"}]
@@ -64,6 +69,10 @@ def read(p):
     with open(p, encoding="utf-8") as f:
         return f.read()
 
+def normalize_html(content):
+    """Evita espaços residuais produzidos por blocos Jinja condicionais."""
+    return "\n".join(line.rstrip() for line in content.splitlines()) + "\n"
+
 def main():
     shutil.rmtree(DIST, ignore_errors=True)
     # OneDrive pode recriar/segurar a pasta por alguns instantes. O build deve
@@ -108,17 +117,17 @@ def main():
     ld = json.dumps({"@context": "https://schema.org", "@graph": [
         {"@type": "Organization", "name": "Vitalis Ring", "url": SITE_URL + "/", "logo": SITE_URL + "/icon-512.png"},
         {"@type": "WebSite", "name": "Vitalis Ring", "url": SITE_URL + "/", "inLanguage": "pt-BR"}]}, ensure_ascii=False)
-    ctx = dict(site_url=SITE_URL, app_url=APP_URL, wa_link=WA_LINK, nav=NAV, nav_mobile=NAV_MOBILE, foot_nav=FOOT_NAV,
+    ctx = dict(site_url=SITE_URL, app_url=APP_URL, show_app_link=SHOW_APP_LINK, wa_link=WA_LINK, nav=NAV, nav_mobile=NAV_MOBILE, foot_nav=FOOT_NAV,
                foot_join=FOOT_JOIN, css_file=css_file, js_file=js_file, logo_w=logo_w, logo_h=52, year=datetime.date.today().year,
                hero_image=hero_image, hero_w=hero_w, hero_h=hero_h, ring_svg=ring_svg)
     for p in PAGES:
         out = os.path.join(DIST, p["route"].strip("/"), "index.html")
         os.makedirs(os.path.dirname(out), exist_ok=True)
-        html = env.get_template(p["template"]).render(page=p, jsonld=ld if p.get("jsonld") else None, **ctx)
+        html = normalize_html(env.get_template(p["template"]).render(page=p, jsonld=ld if p.get("jsonld") else None, **ctx))
         open(out, "w", encoding="utf-8").write(html)
     # 404 estático (caminhos absolutos)
     p404 = {"route": "/404.html", "title": "Página não encontrada | Vitalis Ring", "description": "A página que você procurou não existe ou mudou de endereço. Volte ao início do Vitalis Ring.", "noindex": True}
-    open(os.path.join(DIST, "404.html"), "w", encoding="utf-8").write(env.get_template("404.html").render(page=p404, jsonld=None, **ctx))
+    open(os.path.join(DIST, "404.html"), "w", encoding="utf-8").write(normalize_html(env.get_template("404.html").render(page=p404, jsonld=None, **ctx)))
     # sitemap e robots
     urls = "".join(f"<url><loc>{SITE_URL}{p['route']}</loc></url>" for p in PAGES if not p.get("noindex"))
     open(os.path.join(DIST, "sitemap.xml"), "w", encoding="utf-8").write(
@@ -127,6 +136,9 @@ def main():
     hta = os.path.join(PACK, "hosting", "htaccess.txt")
     if os.path.isfile(hta):
         shutil.copy(hta, os.path.join(DIST, ".htaccess"))
+    cloudflare_headers = os.path.join(PACK, "hosting", "cloudflare-headers.txt")
+    if os.path.isfile(cloudflare_headers):
+        shutil.copy(cloudflare_headers, os.path.join(DIST, "_headers"))
     print("Build OK ->", DIST, "|", [p["route"] for p in PAGES], "| hero_image:", hero_image)
 
 if __name__ == "__main__":

@@ -22,7 +22,14 @@ pip install jinja2
 python build.py
 python tools/audit_site.py --dist ./dist --ignore LNK-002    # LNK-002: páginas internas ainda não construídas (fase 2)
 ```
-Variáveis opcionais: `SITE_URL`, `APP_URL`, `WHATSAPP_NUMBER` (**hoje 5521981918090 = TESTE**), `WHATSAPP_MESSAGE`.
+Variáveis opcionais: `SITE_URL`, `APP_URL`, `WHATSAPP_NUMBER`, `WHATSAPP_MESSAGE`.
+Sem `WHATSAPP_NUMBER`, nenhum botão de WhatsApp é publicado.
+
+Na Cloudflare Pages, configure a raiz como `site`, o comando de build como
+`python -m pip install -r requirements.txt && python build.py` e a saída como
+`dist`. No ambiente Pages (`CF_PAGES=1`), sem `APP_URL`, o site informa que o
+sistema estará disponível em breve em vez de criar um link quebrado para
+`/login`. O build integrado local preserva `/login` na mesma origem.
 
 ## Anel do hero (imagem ou SVG)
 Hoje o hero usa `static/hero/anel-hero-1200.webp` e `-720.webp` (recorte com transparência do PNG enviado; original em `static/hero/original/`). Para voltar ao anel SVG dourado: `HERO=svg python build.py` (ou apague os .webp).
