@@ -102,6 +102,9 @@ def main():
         from PIL import Image
         with Image.open(os.path.join(hero_dir, "anel-hero-1200.webp")) as _im:
             hero_w, hero_h = _im.size
+    family_image_dir = os.path.join(ROOT, "static", "familias")
+    if os.path.isdir(family_image_dir):
+        shutil.copytree(family_image_dir, os.path.join(DIST, "familias", "imagens"), dirs_exist_ok=True)
     # CSS/JS com hash no nome (cache imutável)
     css = read(os.path.join(PACK, "design", "tokens.css")) + "\n" + read(os.path.join(ROOT, "static", "css", "site.css"))
     css = re.sub(r"/\*.*?\*/", "", css, flags=re.S)

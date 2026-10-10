@@ -83,6 +83,8 @@ def test_family_landing_page_is_complete(client, route):
     assert "A tranquilidade de saber que quem você ama está bem" in response.text
     assert "O que você recebe no WhatsApp" in response.text
     assert response.text.count("<details") == 4
+    assert '/familias/imagens/rotina-com-anel.jpg' in response.text
+    assert '/familias/imagens/familiar-no-celular.jpg' in response.text
     assert 'href="https://vitalisring.com.br/familias/"' in response.text
 
 

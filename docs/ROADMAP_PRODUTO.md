@@ -48,7 +48,8 @@ Evidência parcial em 2026-10-10:
 - página de Famílias substituída por uma landing page responsiva em
   `/familias/`, com o endereço anterior `/para-familias/` preservado como
   compatibilidade `noindex`; copy distingue recursos em desenvolvimento de
-  capacidades já comprovadas;
+  capacidades já comprovadas; fotografias contextuais fornecidas pelo usuário
+  foram integradas com identificação de imagem ilustrativa;
 - pendente: revisão visual do usuário e ajustes solicitados. A fase permanece
   em andamento até essa aprovação.
 
