@@ -29,6 +29,22 @@ Aceite:
 - HTTPS e cabeçalhos foram conferidos na URL pública;
 - nenhum segredo, banco ou dado do anel foi publicado.
 
+Evidência parcial em 2026-10-10:
+
+- projeto `vitalisring` criado no Cloudflare Pages gratuito e conectado ao
+  repositório `DimmyBandeira/vitalisring`;
+- produção configurada a partir da branch `feature/area-logada`, com raiz
+  `site`, build por `python build.py` e saída em `site/dist`;
+- primeira implantação disponível em `https://vitalisring.pages.dev`;
+- 14 páginas públicas navegadas sem 404;
+- resposta pública `200 OK` por HTTPS, com CSP, `X-Frame-Options: DENY`,
+  `X-Content-Type-Options: nosniff`, `Permissions-Policy` e
+  `Referrer-Policy` conferidos;
+- viewport móvel 390 x 844 sem overflow horizontal, menu móvel funcional e
+  console do navegador sem erros ou avisos;
+- pendente: revisão visual do usuário, ajustes solicitados e decisão sobre o
+  domínio `vitalisring.com.br`. A fase permanece em andamento até essa aprovação.
+
 ## Fase 2 — Sistema web e alertas por e-mail simulados
 
 Status: `[ ]`
