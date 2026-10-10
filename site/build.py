@@ -9,11 +9,7 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 ROOT = os.path.dirname(os.path.abspath(__file__))
 DIST = os.path.join(ROOT, "dist")
 PACK = os.environ.get("PACK_DIR", ROOT)
-DEFAULT_SITE_URL = (
-    "https://vitalisring.pages.dev"
-    if os.environ.get("CF_PAGES") == "1"
-    else "https://vitalisring.com.br"
-)
+DEFAULT_SITE_URL = "https://vitalisring.com.br"
 SITE_URL = (os.environ.get("SITE_URL") or DEFAULT_SITE_URL).rstrip("/")
 APP_URL = os.environ.get("APP_URL", "").rstrip("/")
 SHOW_APP_LINK = bool(APP_URL) or os.environ.get("CF_PAGES") != "1"

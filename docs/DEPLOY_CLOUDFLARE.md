@@ -13,9 +13,8 @@ SQLite, o coletor BLE nem dados do anel para a Cloudflare.
 
 Variáveis opcionais:
 
-- `SITE_URL`: URL canônica do domínio definitivo. Sem ela, builds do Pages usam
-  `https://vitalisring.pages.dev`; builds locais usam
-  `https://vitalisring.com.br`.
+- `SITE_URL`: URL canônica alternativa. Sem ela, todos os builds usam o domínio
+  definitivo `https://vitalisring.com.br`.
 - `APP_URL`: deixar ausente na Fase 1. Como a Cloudflare fornece `CF_PAGES=1`, o
   acesso ao sistema ficará oculto até o backend da Fase 2 ter uma URL segura.
 - `WHATSAPP_NUMBER`: número aprovado para publicação. Sem essa variável, os
@@ -38,11 +37,17 @@ links internos.
 
 - Data da primeira implantação: 2026-10-10
 - Projeto Pages: `vitalisring`
-- URL pública: `https://vitalisring.pages.dev`
+- URL pública definitiva: `https://vitalisring.com.br`
+- URL técnica do Pages: `https://vitalisring.pages.dev`
 - Branch de produção: `feature/area-logada`
 - Resultado inicial: implantação concluída e resposta `200 OK` por HTTPS
 
 Foram conferidos os cabeçalhos de segurança, as 14 páginas públicas, o menu
 móvel em 390 x 844, a ausência de overflow horizontal e o console do navegador.
-A aprovação visual pelo usuário e a associação do domínio próprio continuam
-pendentes antes do encerramento da Fase 1.
+A aprovação visual pelo usuário continua pendente antes do encerramento da
+Fase 1.
+
+Em 2026-10-10, a zona DNS foi ativada no plano Free com os nameservers
+`kareem.ns.cloudflare.com` e `nicole.ns.cloudflare.com`. O domínio raiz foi
+associado ao Pages por CNAME flattening e respondeu `200 OK` por HTTPS. A
+aprovação visual do usuário continua pendente antes do encerramento da Fase 1.

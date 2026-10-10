@@ -42,8 +42,11 @@ Evidência parcial em 2026-10-10:
   `Referrer-Policy` conferidos;
 - viewport móvel 390 x 844 sem overflow horizontal, menu móvel funcional e
   console do navegador sem erros ou avisos;
-- pendente: revisão visual do usuário, ajustes solicitados e decisão sobre o
-  domínio `vitalisring.com.br`. A fase permanece em andamento até essa aprovação.
+- domínio `vitalisring.com.br` ativado no plano Free, associado ao Pages e
+  respondendo `200 OK` por HTTPS; nameservers confirmados nos resolvedores
+  públicos da Cloudflare e do Google;
+- pendente: revisão visual do usuário e ajustes solicitados. A fase permanece
+  em andamento até essa aprovação.
 
 ## Fase 2 — Sistema web e alertas por e-mail simulados
 
