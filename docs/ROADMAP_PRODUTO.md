@@ -50,6 +50,13 @@ Evidência parcial em 2026-10-10:
   compatibilidade `noindex`; copy distingue recursos em desenvolvimento de
   capacidades já comprovadas; fotografias contextuais fornecidas pelo usuário
   foram integradas com identificação de imagem ilustrativa;
+- página de Médicos & Especialistas publicada no build em `/medicos/`, com
+  `/para-medicos/` preservado como compatibilidade `noindex`; console clínico
+  conceitual rotulado como demonstração sintética, diferenciais técnicos
+  qualificados por estágio de validação e limites clínicos explícitos;
+- build e auditoria de produção com 0 erros e 0 avisos; 115 testes automatizados
+  aprovados; QA no Chrome em desktop e viewport 390 x 844 confirmou navegação,
+  FAQ, menu móvel e ausência de overflow horizontal;
 - pendente: revisão visual do usuário e ajustes solicitados. A fase permanece
   em andamento até essa aprovação.
 

@@ -17,7 +17,7 @@ WA_NUMBER = os.environ.get("WHATSAPP_NUMBER", "").strip()
 WA_MSG = os.environ.get("WHATSAPP_MESSAGE", "Olá! Gostaria de saber mais sobre o Vitalis Ring.")
 WA_LINK = f"https://wa.me/{WA_NUMBER}?text={urllib.parse.quote(WA_MSG)}" if WA_NUMBER else ""
 
-NAV = [{"href": "/familias/", "label": "Famílias"}, {"href": "/para-medicos/", "label": "Médicos"},
+NAV = [{"href": "/familias/", "label": "Famílias"}, {"href": "/medicos/", "label": "Médicos"},
        {"href": "/para-instituicoes/", "label": "Instituições"}, {"href": "/como-funciona/", "label": "Como funciona"}]
 NAV_MOBILE = NAV + [{"href": "/perguntas-frequentes/", "label": "Perguntas frequentes"}]
 FOOT_NAV = [{"href": "/", "label": "Início"}] + NAV + [{"href": "/perguntas-frequentes/", "label": "Perguntas frequentes"},
@@ -35,10 +35,15 @@ PAGES = [
     {"route": "/para-familias/", "template": "familias.html", "title": "Famílias | Vitalis Ring",
      "description": "Esta versão da página para famílias aponta para o novo endereço oficial do Vitalis Ring.",
      "canonical_route": "/familias/", "noindex": True},
+    {"route": "/medicos/", "template": "medicos.html", "title": "Vitalis Ring para Médicos | Tendências longitudinais",
+     "description": "Conheça a proposta do Vitalis Ring para organizar tendências longitudinais de bem-estar e apoiar o acompanhamento entre consultas.",
+     "jsonld": True},
+    {"route": "/para-medicos/", "template": "medicos.html", "title": "Médicos | Vitalis Ring",
+     "description": "Esta versão da página para médicos aponta para o novo endereço oficial do Vitalis Ring.",
+     "canonical_route": "/medicos/", "noindex": True},
 ]
 
 COMING_SOON_PAGES = [
-    ("/para-medicos/", "Para médicos"),
     ("/para-instituicoes/", "Para instituições"),
     ("/como-funciona/", "Como funciona"),
     ("/perguntas-frequentes/", "Perguntas frequentes"),

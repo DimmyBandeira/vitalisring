@@ -9,7 +9,6 @@ import api
 
 
 PLACEHOLDER_ROUTES = (
-    "/para-medicos/",
     "/para-instituicoes/",
     "/como-funciona/",
     "/perguntas-frequentes/",
@@ -24,6 +23,7 @@ PLACEHOLDER_ROUTES = (
 )
 
 FAMILY_ROUTES = ("/familias/", "/para-familias/")
+MEDICAL_ROUTES = ("/medicos/", "/para-medicos/")
 
 
 @pytest.fixture
@@ -91,6 +91,29 @@ def test_family_landing_page_is_complete(client, route):
 def test_family_primary_route_is_indexable_and_legacy_route_is_noindex(client):
     primary = client.get("/familias/")
     legacy = client.get("/para-familias/")
+
+    assert 'content="index,follow,max-image-preview:large"' in primary.text
+    assert 'content="noindex,follow"' in legacy.text
+
+
+@pytest.mark.parametrize("route", MEDICAL_ROUTES)
+def test_medical_landing_page_is_complete(client, route):
+    response = client.get(route)
+
+    assert response.status_code == 200
+    assert response.text.lower().count("<h1") == 1
+    assert "Do dado pontual no consultório ao" in response.text
+    assert "filme contínuo" in response.text
+    assert "A Lacuna do Cuidado Episódico" in response.text
+    assert "Console Clínico &amp; Tendências" in response.text
+    assert "Dados fictícios — demonstração" in response.text
+    assert response.text.count("<details") == 3
+    assert 'href="https://vitalisring.com.br/medicos/"' in response.text
+
+
+def test_medical_primary_route_is_indexable_and_legacy_route_is_noindex(client):
+    primary = client.get("/medicos/")
+    legacy = client.get("/para-medicos/")
 
     assert 'content="index,follow,max-image-preview:large"' in primary.text
     assert 'content="noindex,follow"' in legacy.text
