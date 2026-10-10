@@ -1,5 +1,8 @@
 # Plano de implementação — Área logada Vitalis Ring
 
+> Este documento preserva o detalhamento e o histórico da área logada. O
+> roteiro macro vigente do produto está em `docs/ROADMAP_PRODUTO.md`.
+
 ## 1. Objetivo
 
 Integrar o site público, a área logada e o backend do Vitalis Ring numa única
