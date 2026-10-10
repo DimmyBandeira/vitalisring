@@ -479,11 +479,12 @@ Evidências necessárias:
 Se o anel estiver indisponível, a fase permanece pendente; isso não invalida os
 testes web nem autoriza substituir a evidência física por dados sintéticos.
 
-### Fase 13 — Demonstração pública temporária
+### Fase 13 — Demonstração pública pela Cloudflare
 
 Status: `[ ]`
 
-Objetivo: expor somente a aplicação segura por uma URL temporária.
+Objetivo: expor somente a aplicação segura pela Cloudflare, mantendo o coletor
+BLE e o banco fora da borda pública.
 
 Tarefas:
 
@@ -491,10 +492,11 @@ Tarefas:
 - [ ] Gerar site com `SITE_URL` e `APP_URL` públicos.
 - [ ] Semear apenas dados fictícios identificados.
 - [ ] Subir Uvicorn em `127.0.0.1:8000` com proxy configurado.
-- [ ] Expor somente a porta 8000 pelo ngrok.
+- [ ] Expor somente a porta 8000 pelo Cloudflare Tunnel.
 - [ ] Manter Streamlit e banco fora do túnel.
 - [ ] Executar novamente os testes de exposição pela URL pública.
-- [ ] Documentar como encerrar túnel, servidor e sessões de demonstração.
+- [ ] Documentar como iniciar e encerrar túnel, servidor e sessões de
+  demonstração.
 
 Testes obrigatórios:
 
@@ -515,7 +517,7 @@ Testes obrigatórios:
 | Visual | capturas mobile/desktop | layout, acessibilidade e estados vazios |
 | Regressão | testes de contrato | API, coletor e Streamlit preservados |
 | Hardware | roteiro manual assistido | BLE e primeira leitura do Colmi R10 |
-| Exposição | cliente HTTP + navegador | comportamento real através do ngrok |
+| Exposição | cliente HTTP + navegador | comportamento real através do Cloudflare Tunnel |
 
 Mocks comprovam a lógica de integração, mas não comprovam entrega real por SMTP,
 WhatsApp nem leitura BLE. Essas diferenças devem aparecer no relatório final.
