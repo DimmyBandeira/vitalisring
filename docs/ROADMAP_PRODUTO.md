@@ -45,6 +45,10 @@ Evidência parcial em 2026-10-10:
 - domínio `vitalisring.com.br` ativado no plano Free, associado ao Pages e
   respondendo `200 OK` por HTTPS; nameservers confirmados nos resolvedores
   públicos da Cloudflare e do Google;
+- página de Famílias substituída por uma landing page responsiva em
+  `/familias/`, com o endereço anterior `/para-familias/` preservado como
+  compatibilidade `noindex`; copy distingue recursos em desenvolvimento de
+  capacidades já comprovadas;
 - pendente: revisão visual do usuário e ajustes solicitados. A fase permanece
   em andamento até essa aprovação.
 

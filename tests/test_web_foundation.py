@@ -9,7 +9,6 @@ import api
 
 
 PLACEHOLDER_ROUTES = (
-    "/para-familias/",
     "/para-medicos/",
     "/para-instituicoes/",
     "/como-funciona/",
@@ -23,6 +22,8 @@ PLACEHOLDER_ROUTES = (
     "/politica-de-privacidade/",
     "/politica-de-cookies/",
 )
+
+FAMILY_ROUTES = ("/familias/", "/para-familias/")
 
 
 @pytest.fixture
@@ -71,6 +72,26 @@ def test_placeholder_routes_exist_and_are_noindex(client, route):
     assert response.text.lower().count("<h1") == 1
     assert '<meta name="robots" content="noindex,follow">' in response.text
     assert "Voltar ao início" in response.text
+
+
+@pytest.mark.parametrize("route", FAMILY_ROUTES)
+def test_family_landing_page_is_complete(client, route):
+    response = client.get(route)
+
+    assert response.status_code == 200
+    assert response.text.lower().count("<h1") == 1
+    assert "A tranquilidade de saber que quem você ama está bem" in response.text
+    assert "O que você recebe no WhatsApp" in response.text
+    assert response.text.count("<details") == 4
+    assert 'href="https://vitalisring.com.br/familias/"' in response.text
+
+
+def test_family_primary_route_is_indexable_and_legacy_route_is_noindex(client):
+    primary = client.get("/familias/")
+    legacy = client.get("/para-familias/")
+
+    assert 'content="index,follow,max-image-preview:large"' in primary.text
+    assert 'content="noindex,follow"' in legacy.text
 
 
 def test_unknown_public_route_uses_the_custom_404(client):

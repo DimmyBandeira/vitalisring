@@ -7,14 +7,14 @@
 <meta name="description" content="{{ page.description }}">
 <meta name="author" content="Vitalis Ring">
 <meta name="theme-color" content="#FCF8EE">
-{% if page.noindex %}<meta name="robots" content="noindex,follow">{% else %}<meta name="robots" content="index,follow,max-image-preview:large">
-<link rel="canonical" href="{{ site_url }}{{ page.route }}">{% endif %}
+{% if page.noindex %}<meta name="robots" content="noindex,follow">{% else %}<meta name="robots" content="index,follow,max-image-preview:large">{% endif %}
+<link rel="canonical" href="{{ site_url }}{{ page.canonical_route|default(page.route) }}">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="pt_BR">
 <meta property="og:site_name" content="Vitalis Ring">
 <meta property="og:title" content="{{ page.title }}">
 <meta property="og:description" content="{{ page.description }}">
-<meta property="og:url" content="{{ site_url }}{{ page.route }}">
+<meta property="og:url" content="{{ site_url }}{{ page.canonical_route|default(page.route) }}">
 <meta property="og:image" content="{{ site_url }}/og-default.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">

@@ -17,7 +17,7 @@ WA_NUMBER = os.environ.get("WHATSAPP_NUMBER", "").strip()
 WA_MSG = os.environ.get("WHATSAPP_MESSAGE", "Olá! Gostaria de saber mais sobre o Vitalis Ring.")
 WA_LINK = f"https://wa.me/{WA_NUMBER}?text={urllib.parse.quote(WA_MSG)}" if WA_NUMBER else ""
 
-NAV = [{"href": "/para-familias/", "label": "Famílias"}, {"href": "/para-medicos/", "label": "Médicos"},
+NAV = [{"href": "/familias/", "label": "Famílias"}, {"href": "/para-medicos/", "label": "Médicos"},
        {"href": "/para-instituicoes/", "label": "Instituições"}, {"href": "/como-funciona/", "label": "Como funciona"}]
 NAV_MOBILE = NAV + [{"href": "/perguntas-frequentes/", "label": "Perguntas frequentes"}]
 FOOT_NAV = [{"href": "/", "label": "Início"}] + NAV + [{"href": "/perguntas-frequentes/", "label": "Perguntas frequentes"},
@@ -29,10 +29,15 @@ PAGES = [
     {"route": "/", "template": "home.html", "title": "Vitalis Ring | Cuidado que conecta",
      "description": "Anel inteligente que acompanha o bem-estar de quem você ama e avisa a família quando algo sai do padrão. Entre na lista de espera.",
      "jsonld": True},
+    {"route": "/familias/", "template": "familias.html", "title": "Vitalis Ring para Famílias | Cuidado discreto",
+     "description": "Conheça a proposta do Vitalis Ring para acompanhar o bem-estar de familiares com discrição, contexto e avisos claros.",
+     "jsonld": True},
+    {"route": "/para-familias/", "template": "familias.html", "title": "Famílias | Vitalis Ring",
+     "description": "Esta versão da página para famílias aponta para o novo endereço oficial do Vitalis Ring.",
+     "canonical_route": "/familias/", "noindex": True},
 ]
 
 COMING_SOON_PAGES = [
-    ("/para-familias/", "Para famílias"),
     ("/para-medicos/", "Para médicos"),
     ("/para-instituicoes/", "Para instituições"),
     ("/como-funciona/", "Como funciona"),

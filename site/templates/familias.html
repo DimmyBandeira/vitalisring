@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+{% block main %}
+<section class="family-hero" aria-labelledby="family-title">
+  <div class="family-glow family-glow-one" aria-hidden="true"></div>
+  <div class="family-glow family-glow-two" aria-hidden="true"></div>
+  <div class="container family-hero-grid">
+    <div class="family-hero-copy reveal">
+      <p class="family-badge"><span aria-hidden="true"></span>Tranquilidade para quem cuida <b aria-hidden="true">•</b> Liberdade para quem vive</p>
+      <h1 id="family-title">A tranquilidade de saber que quem você ama está bem, <em>direto no seu WhatsApp.</em></h1>
+      <p class="family-lead">O Vitalis Ring foi pensado para acompanhar estimativas de bem-estar de pais e familiares idosos ao longo do dia. Um anel discreto, sem telas complicadas e com avisos planejados para chegar em linguagem simples.</p>
+      <div class="family-actions">
+        <a class="btn btn-family-primary btn-lg" href="/lista-de-espera/">Garantir acesso antecipado <svg width="18" height="13" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        <a class="btn btn-family-secondary btn-lg" href="#whatsapp">Ver como funciona na prática</a>
+      </div>
+      <p class="family-stage-note"><svg width="19" height="19" aria-hidden="true"><use href="#i-info"/></svg>Produto em desenvolvimento. Recursos, autonomia e integrações serão validados antes do lançamento.</p>
+    </div>
+
+    <div class="family-product" aria-label="Ilustração do anel Vitalis e exemplo fictício de aviso no WhatsApp">
+      <div class="family-product-orbit" aria-hidden="true"></div>
+      {% if hero_image %}
+      <picture class="family-ring-picture">
+        <source media="(max-width: 720px)" srcset="/hero/anel-hero-720.webp">
+        <img src="/hero/anel-hero-1200.webp" alt="Anel inteligente Vitalis em acabamento dourado" width="{{ hero_w }}" height="{{ hero_h }}">
+      </picture>
+      {% else %}
+      <div class="family-ring-fallback" aria-hidden="true">{{ ring_svg|safe }}</div>
+      {% endif %}
+      <div class="family-whatsapp-mini reveal">
+        <div class="family-wa-head"><span class="family-wa-avatar" aria-hidden="true">🌿</span><span><strong>Vitalis</strong><small>agora</small></span><svg width="20" height="20" aria-hidden="true"><use href="#i-wa"/></svg></div>
+        <p><strong>Vale observar</strong><br>Percebemos uma mudança no padrão de repouso. Que tal ligar para saber como está?</p>
+        <span class="family-wa-time">08:12 <b aria-label="entregue">✓✓</b></span>
+      </div>
+      <p class="family-visual-label">Exemplo ilustrativo · Dados fictícios</p>
+    </div>
+  </div>
+</section>
+
+<section class="section family-empathy" aria-labelledby="family-empathy-title">
+  <div class="container">
+    <div class="family-section-heading">
+      <p class="eyebrow">A dor real de quem cuida</p>
+      <h2 id="family-empathy-title" class="h2">A preocupação não precisa ser constante.</h2>
+      <p class="sec-lead">Cuidar também é respeitar espaços. A proposta do Vitalis é transformar a incerteza em contexto, sem tirar a autonomia de quem você ama.</p>
+    </div>
+    <div class="family-pain-grid">
+      <article class="family-pain-card reveal">
+        <span class="family-card-number">01</span>
+        <span class="family-line-icon" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M8 32c8-15 14-15 21-3s9 7 12-2M9 13h.01M39 13h.01"/></svg></span>
+        <h3>A distância que angustia</h3>
+        <p>A incerteza sobre como eles passaram a noite acompanha você no trabalho, no trânsito e nos momentos em que não pode estar por perto.</p>
+      </article>
+      <article class="family-pain-card reveal">
+        <span class="family-card-number">02</span>
+        <span class="family-line-icon" aria-hidden="true"><svg viewBox="0 0 48 48"><rect x="15" y="9" width="18" height="30" rx="6"/><path d="M20 5h8M20 43h8M21 20h6M24 17v6"/></svg></span>
+        <h3>A rejeição aos relógios</h3>
+        <p>Smartwatches pedem recargas frequentes e exibem telas, botões e notificações que podem atrapalhar mais do que ajudar.</p>
+      </article>
+      <article class="family-pain-card reveal">
+        <span class="family-card-number">03</span>
+        <span class="family-line-icon" aria-hidden="true"><svg viewBox="0 0 48 48"><ellipse cx="24" cy="24" rx="12" ry="16"/><path d="M31 12c5 6 5 18 0 24"/></svg></span>
+        <h3>A perda de autonomia</h3>
+        <p>Ninguém quer se sentir vigiado ou tratado como doente. Um anel discreto pode fazer parte da rotina como uma joia, sem dominar o dia.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section family-difference" aria-labelledby="family-difference-title">
+  <div class="container">
+    <div class="family-section-heading family-heading-center">
+      <p class="eyebrow">O que muda na rotina</p>
+      <h2 id="family-difference-title" class="h2">Por que o Vitalis Ring é diferente.</h2>
+      <p class="sec-lead">Tecnologia que fica em segundo plano. O protagonismo continua sendo da pessoa e da família.</p>
+    </div>
+    <div class="family-value-grid">
+      <article class="family-value-card reveal">
+        <span class="family-value-icon"><svg width="30" height="30" aria-hidden="true"><use href="#i-ring"/></svg></span>
+        <h3>Zero atrito</h3>
+        <p>Sem botões e pensado para permanecer no dedo. A versão final busca autonomia de vários dias e resistência à água para a rotina.</p>
+        <small>Especificações finais serão confirmadas no lançamento.</small>
+      </article>
+      <article class="family-value-card family-value-featured reveal">
+        <span class="family-value-icon"><svg width="30" height="30" aria-hidden="true"><use href="#i-chat"/></svg></span>
+        <h3>Alerta inteligente no WhatsApp</h3>
+        <p>Quando uma estimativa sai do padrão habitual, a proposta é enviar um aviso claro, sem expor números de saúde na mensagem.</p>
+        <small>Canal sujeito a consentimento e configuração.</small>
+      </article>
+      <article class="family-value-card reveal">
+        <span class="family-value-icon"><svg width="30" height="30" aria-hidden="true"><use href="#i-adapt"/></svg></span>
+        <h3>Menos avisos sem contexto</h3>
+        <p>O motor demonstrativo considera o padrão da pessoa e a qualidade da leitura antes de sugerir que a família observe.</p>
+        <small>Regras ainda não validadas clinicamente.</small>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section family-message-section" id="whatsapp" aria-labelledby="family-message-title">
+  <div class="container family-message-grid">
+    <div class="family-message-copy reveal">
+      <p class="eyebrow">Calma em vez de alarmismo</p>
+      <h2 id="family-message-title" class="h2">O que você recebe no WhatsApp.</h2>
+      <p class="sec-lead">Uma mensagem curta diz o que merece atenção e sugere um próximo passo humano. Os detalhes ficam protegidos no painel.</p>
+      <ul class="family-checks">
+        <li><svg width="21" height="21" aria-hidden="true"><use href="#i-ok"/></svg><span>Sem números de saúde na notificação</span></li>
+        <li><svg width="21" height="21" aria-hidden="true"><use href="#i-ok"/></svg><span>Linguagem clara, acolhedora e acionável</span></li>
+        <li><svg width="21" height="21" aria-hidden="true"><use href="#i-ok"/></svg><span>Somente para pessoas autorizadas</span></li>
+      </ul>
+    </div>
+    <div class="family-phone-shell reveal" aria-label="Exemplo fictício de mensagem do Vitalis no WhatsApp">
+      <div class="family-phone-status"><span>9:41</span><span aria-hidden="true">● ◖ ▮</span></div>
+      <div class="family-chat-head"><span class="family-chat-avatar" aria-hidden="true">🌿</span><div><strong>Vitalis Alerta Familiar</strong><small>Conta de demonstração</small></div></div>
+      <div class="family-chat-canvas">
+        <div class="family-chat-bubble">
+          <p>🌿 <strong>Vitalis Alerta Familiar</strong></p>
+          <p>Identificamos uma alteração no repouso de Dona Helena às 04:30. Sugerimos ligar para saber como ela está passando a manhã.</p>
+          <button type="button" disabled>Abrir painel da linha de base</button>
+          <span>08:12 <b aria-label="entregue">✓✓</b></span>
+        </div>
+        <p class="family-demo-label">Exemplo fictício — demonstração</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section family-faq-section" aria-labelledby="family-faq-title">
+  <div class="container family-faq-grid">
+    <div>
+      <p class="eyebrow">Perguntas frequentes</p>
+      <h2 id="family-faq-title" class="h2">Antes de colocar o cuidado no dedo.</h2>
+      <p class="sec-lead">Respostas honestas sobre o que o Vitalis pretende entregar — e sobre o que ele nunca deve substituir.</p>
+    </div>
+    <div class="faq family-faq">
+      <details open><summary>Ele substitui o médico ou o SAMU?</summary><p>Não. É uma proposta de monitoramento de estilo de vida e bem-estar para apoiar a rotina da família. Não faz diagnóstico. Em caso de emergência, ligue 192 (SAMU).</p></details>
+      <details><summary>Meu pai precisa ter um smartphone moderno?</summary><p>A fase planejada do aplicativo sincronizará o anel por Bluetooth em segundo plano, com o mínimo de interação na tela. Os requisitos de aparelho e sistema ainda serão publicados.</p></details>
+      <details><summary>Como sei o tamanho ideal do anel?</summary><p>A proposta é enviar um kit de medição de aros antes do envio oficial, para que a família confirme um encaixe confortável.</p></details>
+      <details><summary>E se ele molhar ao lavar a louça ou tomar banho?</summary><p>O produto final é pensado para acompanhar atividades cotidianas com resistência à água e a pequenos impactos. O limite certificado será informado antes da venda.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="family-final" aria-labelledby="family-final-title">
+  <div class="container family-final-inner reveal">
+    <p class="eyebrow eyebrow-light">Para estar perto, mesmo de longe</p>
+    <h2 id="family-final-title">Cuidado discreto para eles.<br>Mais tranquilidade para você.</h2>
+    <p>Entre na lista para acompanhar os testes e saber quando os primeiros acessos estiverem disponíveis.</p>
+    <a class="btn btn-gold btn-lg" href="/lista-de-espera/">Garantir acesso antecipado <svg width="18" height="13" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+    <p class="family-regulatory">Vitalis Ring é um dispositivo de monitoramento de estilo de vida e bem-estar em desenvolvimento. Não substitui avaliações, diagnósticos ou tratamentos médicos.</p>
+  </div>
+</section>
+{% endblock %}
