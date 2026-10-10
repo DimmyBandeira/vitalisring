@@ -475,6 +475,13 @@ body.menu-open { overflow: hidden; }
 .medical-heading-center { margin: 0 auto; text-align: center; }
 .medical-heading-center .h2, .medical-heading-center .sec-lead { margin-left: auto; margin-right: auto; }
 .medical-gap { background: #fff; }
+.medical-clinician-image { position: relative; overflow: hidden; margin: 50px 0 0; aspect-ratio: 16 / 8.6; border-radius: 30px; background: #E8ECE9; box-shadow: 0 30px 80px -55px rgba(20,41,31,.75); }
+.medical-clinician-image::after { content: ""; position: absolute; inset: 42% 0 0; background: linear-gradient(180deg, transparent, rgba(12,30,22,.78)); pointer-events: none; }
+.medical-clinician-image img { width: 100%; height: 100%; object-fit: cover; object-position: center 42%; }
+.medical-clinician-image figcaption { position: absolute; z-index: 1; left: clamp(24px, 4vw, 48px); right: clamp(24px, 4vw, 48px); bottom: clamp(22px, 3vw, 38px); display: grid; max-width: 39em; color: #fff; }
+.medical-clinician-image figcaption strong { font: 600 clamp(28px, 3vw, 40px)/1.08 var(--vr-font-display); }
+.medical-clinician-image figcaption span { margin-top: 7px; color: #E4ECE7; font-size: 16px; }
+.medical-clinician-image figcaption small { margin-top: 10px; color: #C7D2CB; font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
 .medical-comparison { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; margin-top: 52px; }
 .medical-compare-card { min-height: 460px; padding: clamp(30px, 4vw, 48px); border-radius: 28px; }
 .medical-compare-traditional { border: 1px solid #E2E3DF; background: #F5F5F2; }
@@ -509,6 +516,17 @@ body.menu-open { overflow: hidden; }
 .medical-pillar-featured h3 { color: #1D2823; }
 .medical-pillar-card p { color: #BFCAC3; font-size: 16px; line-height: 1.62; }
 .medical-pillar-featured p { color: #59625D; }
+.medical-sensor-feature { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(320px, .95fr); gap: clamp(34px, 5vw, 68px); align-items: center; margin-top: 64px; padding-top: 52px; border-top: 1px solid rgba(255,255,255,.12); }
+.medical-sensor-feature figure { position: relative; overflow: hidden; min-height: 450px; margin: 0; border-radius: 25px; background: #0A1510; box-shadow: 0 28px 70px -42px rgba(0,0,0,.85); }
+.medical-sensor-feature figure::after { content: ""; position: absolute; inset: 58% 0 0; background: linear-gradient(180deg, transparent, rgba(5,14,10,.84)); pointer-events: none; }
+.medical-sensor-feature img { width: 100%; height: 100%; min-height: 450px; object-fit: cover; object-position: center; }
+.medical-sensor-feature figcaption { position: absolute; z-index: 1; left: 21px; right: 21px; bottom: 18px; color: #CAD5CE; font-size: 10px; line-height: 1.45; letter-spacing: .04em; }
+.medical-sensor-kicker { margin-bottom: 17px; color: #9CCBAD; font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+.medical-sensor-feature h3 { max-width: 12em; color: #fff; font-size: clamp(2.15rem, 1.55rem + 1.5vw, 3.25rem); line-height: 1.08; }
+.medical-sensor-feature > div > p:not(.medical-sensor-kicker) { margin-top: 20px; color: #BECAC2; font-size: 16px; line-height: 1.65; }
+.medical-sensor-feature ul { display: grid; gap: 12px; margin-top: 27px; }
+.medical-sensor-feature li { display: flex; gap: 10px; align-items: flex-start; color: #DCE7DF; font-size: 14px; }
+.medical-sensor-feature li svg { flex: none; margin-top: 1px; color: #8FC4A3; }
 
 .medical-preview { background: #EEF1EC; }
 .medical-preview-intro { display: grid; grid-template-columns: 1fr .7fr; gap: 60px; align-items: end; }
@@ -581,6 +599,7 @@ body.menu-open { overflow: hidden; }
   .medical-hero-console { order: -1; width: min(100%, 680px); margin: 0 auto; }
   .medical-comparison, .medical-pillar-grid, .medical-preview-intro, .medical-privacy-grid, .medical-faq-grid { grid-template-columns: 1fr; }
   .medical-pillar-featured { transform: none; }
+  .medical-sensor-feature { grid-template-columns: 1fr; }
   .medical-dashboard-grid { grid-template-columns: 220px 1fr; }
 }
 
@@ -598,9 +617,17 @@ body.menu-open { overflow: hidden; }
   .medical-hero-metrics article:nth-child(n+2) { display: none; }
   .medical-mini-chart { padding: 13px 10px 9px; }
   .medical-comparison { margin-top: 36px; }
+  .medical-clinician-image { margin: 34px 0 0; aspect-ratio: auto; border-radius: 22px; }
+  .medical-clinician-image::after { display: none; }
+  .medical-clinician-image img { aspect-ratio: 4 / 5; object-position: 58% center; }
+  .medical-clinician-image figcaption { position: static; padding: 19px 21px 22px; background: #17382A; }
+  .medical-clinician-image figcaption strong { font-size: 28px; }
   .medical-compare-card { min-height: 0; padding: 28px 23px; }
   .medical-compare-top { margin-bottom: 30px; }
   .medical-pillar-card { padding: 28px 23px; }
+  .medical-sensor-feature { margin-top: 45px; padding-top: 39px; }
+  .medical-sensor-feature figure, .medical-sensor-feature img { min-height: 390px; }
+  .medical-sensor-feature img { object-position: 54% center; }
   .medical-preview-intro { gap: 12px; }
   .medical-dashboard { border-radius: 22px; }
   .medical-dashboard-head { align-items: flex-start; }

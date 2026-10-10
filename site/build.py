@@ -110,6 +110,9 @@ def main():
     family_image_dir = os.path.join(ROOT, "static", "familias")
     if os.path.isdir(family_image_dir):
         shutil.copytree(family_image_dir, os.path.join(DIST, "familias", "imagens"), dirs_exist_ok=True)
+    medical_image_dir = os.path.join(ROOT, "static", "medicos")
+    if os.path.isdir(medical_image_dir):
+        shutil.copytree(medical_image_dir, os.path.join(DIST, "medicos", "imagens"), dirs_exist_ok=True)
     # CSS/JS com hash no nome (cache imutável)
     css = read(os.path.join(PACK, "design", "tokens.css")) + "\n" + read(os.path.join(ROOT, "static", "css", "site.css"))
     css = re.sub(r"/\*.*?\*/", "", css, flags=re.S)

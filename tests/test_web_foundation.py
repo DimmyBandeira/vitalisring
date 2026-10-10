@@ -108,6 +108,9 @@ def test_medical_landing_page_is_complete(client, route):
     assert "Console Clínico &amp; Tendências" in response.text
     assert "Dados fictícios — demonstração" in response.text
     assert response.text.count("<details") == 3
+    assert '/medicos/imagens/especialista-console.webp' in response.text
+    assert '/medicos/imagens/anel-sensor-ppg.webp' in response.text
+    assert "Representação conceitual, sem certificação técnica" in response.text
     assert 'href="https://vitalisring.com.br/medicos/"' in response.text
 
 

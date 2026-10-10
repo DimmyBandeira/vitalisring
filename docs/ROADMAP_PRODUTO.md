@@ -53,7 +53,10 @@ Evidência parcial em 2026-10-10:
 - página de Médicos & Especialistas publicada no build em `/medicos/`, com
   `/para-medicos/` preservado como compatibilidade `noindex`; console clínico
   conceitual rotulado como demonstração sintética, diferenciais técnicos
-  qualificados por estágio de validação e limites clínicos explícitos;
+  qualificados por estágio de validação e limites clínicos explícitos; imagens
+  fornecidas pelo usuário foram otimizadas e integradas como ilustrações de
+  acompanhamento profissional e do conceito óptico, com ressalva explícita de
+  que inscrições e componentes não representam certificação ou produto final;
 - build e auditoria de produção com 0 erros e 0 avisos; 115 testes automatizados
   aprovados; QA no Chrome em desktop e viewport 390 x 844 confirmou navegação,
   FAQ, menu móvel e ausência de overflow horizontal;
