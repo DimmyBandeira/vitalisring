@@ -9,7 +9,6 @@ import api
 
 
 PLACEHOLDER_ROUTES = (
-    "/para-instituicoes/",
     "/como-funciona/",
     "/perguntas-frequentes/",
     "/seguranca-e-privacidade/",
@@ -24,6 +23,7 @@ PLACEHOLDER_ROUTES = (
 
 FAMILY_ROUTES = ("/familias/", "/para-familias/")
 MEDICAL_ROUTES = ("/medicos/", "/para-medicos/")
+INSTITUTION_ROUTES = ("/instituicoes/", "/para-instituicoes/")
 
 
 @pytest.fixture
@@ -121,6 +121,32 @@ def test_medical_primary_route_is_indexable_and_legacy_route_is_noindex(client):
     assert 'content="index,follow,max-image-preview:large"' in primary.text
     assert 'content="noindex,follow"' in legacy.text
 
+
+@pytest.mark.parametrize("route", INSTITUTION_ROUTES)
+def test_institution_landing_page_is_complete(client, route):
+    response = client.get(route)
+
+    assert response.status_code == 200
+    assert response.text.lower().count("<h1") == 1
+    assert "Segurança contínua para seus residentes." in response.text
+    assert "Três gargalos que pesam sobre a equipe" in response.text
+    assert "Dashboard de Gestão de Pavilhões" in response.text
+    assert "Quarto 204 · Sr. Roberto" in response.text
+    assert "Dados fictícios — demonstração" in response.text
+    assert response.text.count("<details") == 3
+    assert "/instituicoes/imagens/residente-rotina.webp" in response.text
+    assert "/instituicoes/imagens/equipe-posto-enfermagem.webp" in response.text
+    assert "Não substitui equipamentos médicos de suporte à vida" in response.text
+    assert 'href="https://vitalisring.com.br/instituicoes/"' in response.text
+
+
+def test_institution_primary_route_is_indexable_and_legacy_route_is_noindex(client):
+    primary = client.get("/instituicoes/")
+    legacy = client.get("/para-instituicoes/")
+
+    assert 'content="index,follow,max-image-preview:large"' in primary.text
+    assert 'content="noindex,follow"' in legacy.text
+    assert client.get("/instituicoes/imagens/residente-rotina.webp").status_code == 200
 
 def test_unknown_public_route_uses_the_custom_404(client):
     response = client.get("/pagina-que-nao-existe/")

@@ -18,7 +18,7 @@ WA_MSG = os.environ.get("WHATSAPP_MESSAGE", "Olá! Gostaria de saber mais sobre 
 WA_LINK = f"https://wa.me/{WA_NUMBER}?text={urllib.parse.quote(WA_MSG)}" if WA_NUMBER else ""
 
 NAV = [{"href": "/familias/", "label": "Famílias"}, {"href": "/medicos/", "label": "Médicos"},
-       {"href": "/para-instituicoes/", "label": "Instituições"}, {"href": "/como-funciona/", "label": "Como funciona"}]
+       {"href": "/instituicoes/", "label": "Instituições"}, {"href": "/como-funciona/", "label": "Como funciona"}]
 NAV_MOBILE = NAV + [{"href": "/perguntas-frequentes/", "label": "Perguntas frequentes"}]
 FOOT_NAV = [{"href": "/", "label": "Início"}] + NAV + [{"href": "/perguntas-frequentes/", "label": "Perguntas frequentes"},
             {"href": "/seguranca-e-privacidade/", "label": "Segurança e privacidade"}]
@@ -41,10 +41,15 @@ PAGES = [
     {"route": "/para-medicos/", "template": "medicos.html", "title": "Médicos | Vitalis Ring",
      "description": "Esta versão da página para médicos aponta para o novo endereço oficial do Vitalis Ring.",
      "canonical_route": "/medicos/", "noindex": True},
+    {"route": "/instituicoes/", "template": "instituicoes.html", "title": "Vitalis Ring para Instituições | ILPIs e Home Care",
+     "description": "Conheça a proposta do Vitalis Ring para ILPIs e home care: leituras contínuas e não intrusivas, painel por prioridade e governança de acesso.",
+     "jsonld": True},
+    {"route": "/para-instituicoes/", "template": "instituicoes.html", "title": "Instituições | Vitalis Ring",
+     "description": "Esta versão da página para instituições aponta para o novo endereço oficial do Vitalis Ring.",
+     "canonical_route": "/instituicoes/", "noindex": True},
 ]
 
 COMING_SOON_PAGES = [
-    ("/para-instituicoes/", "Para instituições"),
     ("/como-funciona/", "Como funciona"),
     ("/perguntas-frequentes/", "Perguntas frequentes"),
     ("/seguranca-e-privacidade/", "Segurança e privacidade"),
@@ -113,6 +118,9 @@ def main():
     medical_image_dir = os.path.join(ROOT, "static", "medicos")
     if os.path.isdir(medical_image_dir):
         shutil.copytree(medical_image_dir, os.path.join(DIST, "medicos", "imagens"), dirs_exist_ok=True)
+    institution_image_dir = os.path.join(ROOT, "static", "instituicoes")
+    if os.path.isdir(institution_image_dir):
+        shutil.copytree(institution_image_dir, os.path.join(DIST, "instituicoes", "imagens"), dirs_exist_ok=True)
     # CSS/JS com hash no nome (cache imutável)
     css = read(os.path.join(PACK, "design", "tokens.css")) + "\n" + read(os.path.join(ROOT, "static", "css", "site.css"))
     css = re.sub(r"/\*.*?\*/", "", css, flags=re.S)

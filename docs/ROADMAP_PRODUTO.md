@@ -60,6 +60,17 @@ Evidência parcial em 2026-10-10:
 - build e auditoria de produção com 0 erros e 0 avisos; 115 testes automatizados
   aprovados; QA no Chrome em desktop e viewport 390 x 844 confirmou navegação,
   FAQ, menu móvel e ausência de overflow horizontal;
+- página de Instituições & ILPIs publicada no build em `/instituicoes/`, com
+  `/para-instituicoes/` preservado como compatibilidade `noindex`; painel de
+  pavilhões conceitual rotulado como demonstração sintética; alegações do
+  briefing sem comprovação (substituição de rondas, implantação em 48 horas,
+  titânio/resina médica, à prova d'água, integração PEP ativa, calculadora de
+  sinistralidade) reescritas como proposta, recurso previsto ou item em
+  definição; duas imagens fornecidas pelo usuário otimizadas para WebP e
+  identificadas como ilustrativas;
+- build e auditoria de produção com 0 erros e 0 avisos; 117 testes automatizados
+  aprovados; QA com Chrome headless em 1440 px e em iframe de 390 px confirmou
+  ausência de overflow horizontal e carregamento das imagens;
 - pendente: revisão visual do usuário e ajustes solicitados. A fase permanece
   em andamento até essa aprovação.
 
