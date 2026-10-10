@@ -9,7 +9,6 @@ import api
 
 
 PLACEHOLDER_ROUTES = (
-    "/como-funciona/",
     "/perguntas-frequentes/",
     "/seguranca-e-privacidade/",
     "/lista-de-espera/",
@@ -147,6 +146,22 @@ def test_institution_primary_route_is_indexable_and_legacy_route_is_noindex(clie
     assert 'content="index,follow,max-image-preview:large"' in primary.text
     assert 'content="noindex,follow"' in legacy.text
     assert client.get("/instituicoes/imagens/residente-rotina.webp").status_code == 200
+
+def test_how_it_works_page_is_complete_and_indexable(client):
+    response = client.get("/como-funciona/")
+
+    assert response.status_code == 200
+    assert response.text.lower().count("<h1") == 1
+    assert "Do seu dedo ao WhatsApp da família." in response.text
+    assert "O motor de análise SAFE" in response.text
+    assert "Anatomia do hardware" in response.text
+    assert "Dados fictícios — demonstração" in response.text
+    assert response.text.count("<details") == 4
+    assert "/como-funciona/imagens/anel-e-aplicativo.webp" in response.text
+    assert "/como-funciona/imagens/anatomia-conceitual.webp" in response.text
+    assert "não substitui serviços de emergência (como o 192)" in response.text
+    assert 'content="index,follow,max-image-preview:large"' in response.text
+    assert client.get("/como-funciona/imagens/anatomia-conceitual.webp").status_code == 200
 
 def test_unknown_public_route_uses_the_custom_404(client):
     response = client.get("/pagina-que-nao-existe/")

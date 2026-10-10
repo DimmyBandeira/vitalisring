@@ -45,7 +45,7 @@ RESOURCE_RELS = {"stylesheet", "preload", "modulepreload", "prefetch", "icon", "
 SKIP_TAGS = {"script", "style", "noscript", "template", "svg", "head"}
 DEFAULT_NOINDEX = [
     "/obrigado/", "/confirmado/", "/para-familias/", "/para-medicos/",
-    "/para-instituicoes/", "/como-funciona/", "/perguntas-frequentes/",
+    "/para-instituicoes/", "/perguntas-frequentes/",
     "/seguranca-e-privacidade/", "/lista-de-espera/",
     "/agendar-demonstracao/", "/programa-piloto-medicos/", "/contato/",
     "/termos-de-uso/", "/politica-de-privacidade/", "/politica-de-cookies/",

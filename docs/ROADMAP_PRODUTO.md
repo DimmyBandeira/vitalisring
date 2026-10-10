@@ -71,6 +71,17 @@ Evidência parcial em 2026-10-10:
 - build e auditoria de produção com 0 erros e 0 avisos; 117 testes automatizados
   aprovados; QA com Chrome headless em 1440 px e em iframe de 390 px confirmou
   ausência de overflow horizontal e carregamento das imagens;
+- página Como Funciona publicada e indexável em `/como-funciona/` (removida da
+  lista de `noindex` esperada pelo auditor); pipeline em três etapas com
+  indicação do que funciona no protótipo (FC e SpO₂) e do que está em
+  validação (SAFE, movimento, WhatsApp); anatomia do hardware apresentada como
+  metas da versão comercial; alegações do briefing sem comprovação ("em
+  segundos", "tempo real", "alta precisão", eliminação de falsos alarmes,
+  titânio aeroespacial abaixo de 5 g, 5ATM, carga em 60 minutos, criptografia
+  ponta a ponta) reescritas como meta, previsão ou item a confirmar; imagens
+  conceituais identificadas como ilustrativas sem certificação; 117 testes e
+  auditoria de produção com 0 erros e 0 avisos; QA em 1440 px e 390 px sem
+  overflow horizontal;
 - pendente: revisão visual do usuário e ajustes solicitados. A fase permanece
   em andamento até essa aprovação.
 

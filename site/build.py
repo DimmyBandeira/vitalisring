@@ -47,10 +47,12 @@ PAGES = [
     {"route": "/para-instituicoes/", "template": "instituicoes.html", "title": "Instituições | Vitalis Ring",
      "description": "Esta versão da página para instituições aponta para o novo endereço oficial do Vitalis Ring.",
      "canonical_route": "/instituicoes/", "noindex": True},
+    {"route": "/como-funciona/", "template": "como_funciona.html", "title": "Como funciona o Vitalis Ring | Do dedo ao WhatsApp",
+     "description": "Veja como o Vitalis Ring combina leitura óptica no dedo, linha de base individual e avisos simples no WhatsApp para a rede de apoio.",
+     "jsonld": True},
 ]
 
 COMING_SOON_PAGES = [
-    ("/como-funciona/", "Como funciona"),
     ("/perguntas-frequentes/", "Perguntas frequentes"),
     ("/seguranca-e-privacidade/", "Segurança e privacidade"),
     ("/lista-de-espera/", "Lista de espera"),
@@ -121,6 +123,9 @@ def main():
     institution_image_dir = os.path.join(ROOT, "static", "instituicoes")
     if os.path.isdir(institution_image_dir):
         shutil.copytree(institution_image_dir, os.path.join(DIST, "instituicoes", "imagens"), dirs_exist_ok=True)
+    how_image_dir = os.path.join(ROOT, "static", "como-funciona")
+    if os.path.isdir(how_image_dir):
+        shutil.copytree(how_image_dir, os.path.join(DIST, "como-funciona", "imagens"), dirs_exist_ok=True)
     # CSS/JS com hash no nome (cache imutável)
     css = read(os.path.join(PACK, "design", "tokens.css")) + "\n" + read(os.path.join(ROOT, "static", "css", "site.css"))
     css = re.sub(r"/\*.*?\*/", "", css, flags=re.S)
