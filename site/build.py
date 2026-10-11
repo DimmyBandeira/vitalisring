@@ -50,12 +50,17 @@ PAGES = [
     {"route": "/como-funciona/", "template": "como_funciona.html", "title": "Como funciona o Vitalis Ring | Do dedo ao WhatsApp",
      "description": "Veja como o Vitalis Ring combina leitura óptica no dedo, linha de base individual e avisos simples no WhatsApp para a rede de apoio.",
      "jsonld": True},
+    {"route": "/lista-de-espera/", "template": "lista_espera.html", "title": "Lista de espera | Vitalis Ring — Lote Fundador",
+     "description": "Entre na lista de espera do Vitalis Ring: prioridade no primeiro lote, kit de aros medidores e condições de lançamento comunicadas primeiro aos inscritos.",
+     "jsonld": True, "minimal_header": True},
+    {"route": "/obrigado/", "template": "obrigado.html", "title": "Inscrição recebida | Vitalis Ring",
+     "description": "Sua inscrição na lista de espera do Vitalis Ring foi recebida.",
+     "noindex": True, "minimal_header": True},
 ]
 
 COMING_SOON_PAGES = [
     ("/perguntas-frequentes/", "Perguntas frequentes"),
     ("/seguranca-e-privacidade/", "Segurança e privacidade"),
-    ("/lista-de-espera/", "Lista de espera"),
     ("/agendar-demonstracao/", "Agendar demonstração"),
     ("/programa-piloto-medicos/", "Programa piloto para médicos"),
     ("/contato/", "Contato"),
@@ -126,6 +131,9 @@ def main():
     how_image_dir = os.path.join(ROOT, "static", "como-funciona")
     if os.path.isdir(how_image_dir):
         shutil.copytree(how_image_dir, os.path.join(DIST, "como-funciona", "imagens"), dirs_exist_ok=True)
+    waitlist_image_dir = os.path.join(ROOT, "static", "lista-de-espera")
+    if os.path.isdir(waitlist_image_dir):
+        shutil.copytree(waitlist_image_dir, os.path.join(DIST, "lista-de-espera", "imagens"), dirs_exist_ok=True)
     # CSS/JS com hash no nome (cache imutável)
     css = read(os.path.join(PACK, "design", "tokens.css")) + "\n" + read(os.path.join(ROOT, "static", "css", "site.css"))
     css = re.sub(r"/\*.*?\*/", "", css, flags=re.S)

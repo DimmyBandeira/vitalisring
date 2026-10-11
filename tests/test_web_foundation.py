@@ -11,7 +11,6 @@ import api
 PLACEHOLDER_ROUTES = (
     "/perguntas-frequentes/",
     "/seguranca-e-privacidade/",
-    "/lista-de-espera/",
     "/agendar-demonstracao/",
     "/programa-piloto-medicos/",
     "/contato/",
@@ -162,6 +161,40 @@ def test_how_it_works_page_is_complete_and_indexable(client):
     assert "não substitui serviços de emergência (como o 192)" in response.text
     assert 'content="index,follow,max-image-preview:large"' in response.text
     assert client.get("/como-funciona/imagens/anatomia-conceitual.webp").status_code == 200
+
+def test_waitlist_page_has_compliant_form(client):
+    response = client.get("/lista-de-espera/")
+    html = response.text
+
+    assert response.status_code == 200
+    assert html.lower().count("<h1") == 1
+    assert "Garanta seu lugar no" in html
+    assert 'action="/api/lista-de-espera" method="post"' in html
+    for field in ('name="nome"', 'name="whatsapp"', 'name="email"', 'name="website"'):
+        assert field in html
+    assert html.count('name="objetivo"') == 4
+    assert 'name="consentimento" value="on" required' in html
+    assert 'href="/politica-de-privacidade/"' in html
+    assert "Você está na lista de espera!" in html
+    assert "site-header-minimal" in html
+    assert 'content="index,follow,max-image-preview:large"' in html
+    assert client.get("/lista-de-espera/imagens/anel-e-kit-de-aros.webp").status_code == 200
+
+
+def test_waitlist_copy_has_no_fabricated_scarcity_or_absolute_claims(client):
+    text = client.get("/lista-de-espera/").text
+
+    assert "%" not in re.sub(r"<style.*?</style>|style=\"[^\"]*\"", "", text, flags=re.S)
+    assert "100" not in re.sub(r"<[^>]+>", " ", text)
+    assert "Vagas Limitadas" not in text
+
+
+def test_thank_you_page_is_noindex(client):
+    response = client.get("/obrigado/")
+
+    assert response.status_code == 200
+    assert "Você está na lista de espera!" in response.text
+    assert 'content="noindex,follow"' in response.text
 
 def test_unknown_public_route_uses_the_custom_404(client):
     response = client.get("/pagina-que-nao-existe/")

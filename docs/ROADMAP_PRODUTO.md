@@ -82,6 +82,20 @@ Evidência parcial em 2026-10-10:
   conceituais identificadas como ilustrativas sem certificação; 117 testes e
   auditoria de produção com 0 erros e 0 avisos; QA em 1440 px e 390 px sem
   overflow horizontal;
+- página Lista de Espera publicada e indexável em `/lista-de-espera/`, com
+  cabeçalho minimalista e página `/obrigado/` (`noindex`) para envio sem
+  JavaScript; formulário com consentimento não pré-marcado, honeypot, máscara
+  de celular e tela de sucesso; envio por Pages Function para Cloudflare D1,
+  **desligado até o binding `DB` ser criado** — o que só deve ocorrer após a
+  Política de Privacidade definitiva (passo a passo em
+  `DEPLOY_CLOUDFLARE.md`). Exceção ao escopo original da Fase 1 ("sem dados
+  pessoais"), decidida pelo usuário em 2026-10-10; o escopo sem API permanece
+  para o backend do produto. Copy do briefing ajustada: removidos contador de
+  escassez sem fonte ("80% das vagas"), "100% seguros", "vagas limitadas",
+  promessa de valor reduzido e confirmação automática por WhatsApp; 120 testes
+  (incluindo 9 testes Node da função) e auditoria com 0 erros e 0 avisos; QA
+  em 1440 px e 390 px sem overflow e com validação, carregamento, erro e
+  sucesso verificados com resposta simulada;
 - pendente: revisão visual do usuário e ajustes solicitados. A fase permanece
   em andamento até essa aprovação.
 

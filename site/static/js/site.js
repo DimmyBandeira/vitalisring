@@ -64,4 +64,74 @@
   });
   // gancho para marketing: nada é carregado sem consentimento explícito (hoje não há recurso de marketing)
   window.loadMarketing = function () {};
+
+  // lista de espera: máscara, validação, envio sem recarregar e tela de sucesso
+  var wl = d.querySelector("[data-waitlist]");
+  if (wl && window.fetch && window.FormData) {
+    wl.noValidate = true;
+    var phoneIn = wl.querySelector("[name=whatsapp]"), submit = wl.querySelector(".wl-submit"),
+        status = wl.querySelector(".wl-form-status"), success = d.querySelector(".wl-success");
+    var MSG = {
+      nome: "Informe seu nome completo.",
+      whatsapp: "Informe um celular com DDD, por exemplo (21) 98765-4321.",
+      email: "Informe um e-mail válido.",
+      objetivo: "Escolha o seu principal objetivo.",
+      consentimento: "É preciso concordar com a Política de Privacidade."
+    };
+    phoneIn.addEventListener("input", function () {
+      var v = phoneIn.value.replace(/\D/g, "").slice(0, 11), out = v;
+      if (v.length > 2) out = "(" + v.slice(0, 2) + ") " + v.slice(2);
+      if (v.length > 7) out = "(" + v.slice(0, 2) + ") " + v.slice(2, 7) + "-" + v.slice(7);
+      phoneIn.value = out;
+    });
+    function showErrors(errs) {
+      wl.querySelectorAll("[data-error-for]").forEach(function (p) {
+        var k = p.getAttribute("data-error-for"), field = wl.querySelector("[name=" + k + "]");
+        p.textContent = errs[k] || ""; p.hidden = !errs[k];
+        if (field && field.type !== "radio") field.setAttribute("aria-invalid", String(!!errs[k]));
+      });
+      var first = Object.keys(MSG).filter(function (k) { return errs[k]; })[0];
+      if (first) wl.querySelector("[name=" + first + "]").focus();
+      return !first;
+    }
+    function check() {
+      var f = new FormData(wl), e = {};
+      var nome = String(f.get("nome") || "").trim();
+      if (nome.length < 3 || nome.indexOf(" ") < 0) e.nome = MSG.nome;
+      if (!/^[1-9][1-9]9\d{8}$/.test(String(f.get("whatsapp") || "").replace(/\D/g, ""))) e.whatsapp = MSG.whatsapp;
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(f.get("email") || "").trim())) e.email = MSG.email;
+      if (!f.get("objetivo")) e.objetivo = MSG.objetivo;
+      if (!f.get("consentimento")) e.consentimento = MSG.consentimento;
+      return e;
+    }
+    function busy(on) { submit.disabled = on; submit.classList.toggle("is-loading", on); submit.setAttribute("aria-busy", String(on)); }
+    wl.addEventListener("submit", function (ev) {
+      ev.preventDefault();
+      status.hidden = true;
+      if (!showErrors(check())) return;
+      busy(true);
+      fetch(wl.action, { method: "POST", body: new FormData(wl), headers: { Accept: "application/json" } })
+        .then(function (r) { return r.json().catch(function () { return { ok: false }; }); })
+        .then(function (res) {
+          if (res.ok) {
+            wl.hidden = true; success.hidden = false; success.focus();
+          } else {
+            if (res.errors) showErrors(res.errors);
+            status.textContent = res.message || "Não foi possível registrar agora. Tente novamente em instantes.";
+            status.hidden = false;
+          }
+        })
+        .catch(function () {
+          status.textContent = "Sem conexão. Verifique sua internet e tente novamente.";
+          status.hidden = false;
+        })
+        .then(function () { busy(false); });
+    });
+    var share = d.querySelector("[data-share]"), shareStatus = d.querySelector(".wl-share-status");
+    if (share) share.addEventListener("click", function () {
+      var data = { title: "Vitalis Ring", text: "Conheça o Vitalis Ring e entre na lista de espera:", url: location.origin + "/lista-de-espera/" };
+      if (navigator.share) { navigator.share(data).catch(function () {}); return; }
+      if (navigator.clipboard) navigator.clipboard.writeText(data.url).then(function () { shareStatus.textContent = "Link copiado."; });
+    });
+  }
 })();

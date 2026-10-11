@@ -58,6 +58,15 @@
 
 <a class="skip" href="#conteudo">Pular para o conteúdo</a>
 
+{% if page.minimal_header %}
+<header class="site-header site-header-minimal" id="top">
+  <div class="hdr container">
+    <a class="brand" href="/" aria-label="Vitalis Ring — início"><img src="/assets/logo/logo-horizontal-claro.svg" alt="Vitalis Ring" width="{{ logo_w }}" height="{{ logo_h }}"></a>
+    <p class="hdr-status"><span aria-hidden="true"></span><i class="hdr-status-long">Lista de espera aberta</i><i class="hdr-status-short">Lista aberta</i> <b aria-hidden="true">·</b> <em>Lote Fundador</em></p>
+    <a class="hdr-back" href="/">Voltar ao site</a>
+  </div>
+</header>
+{% else %}
 <header class="site-header" id="top">
   <div class="hdr container">
     <a class="brand" href="/" aria-label="Vitalis Ring — início"><img src="/assets/logo/logo-horizontal-claro.svg" alt="Vitalis Ring" width="{{ logo_w }}" height="{{ logo_h }}"></a>
@@ -80,6 +89,7 @@
     </nav>
   </div>
 </header>
+{% endif %}
 
 <main id="conteudo">
 {% block main %}{% endblock %}

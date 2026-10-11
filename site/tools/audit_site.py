@@ -46,7 +46,7 @@ SKIP_TAGS = {"script", "style", "noscript", "template", "svg", "head"}
 DEFAULT_NOINDEX = [
     "/obrigado/", "/confirmado/", "/para-familias/", "/para-medicos/",
     "/para-instituicoes/", "/perguntas-frequentes/",
-    "/seguranca-e-privacidade/", "/lista-de-espera/",
+    "/seguranca-e-privacidade/",
     "/agendar-demonstracao/", "/programa-piloto-medicos/", "/contato/",
     "/termos-de-uso/", "/politica-de-privacidade/", "/politica-de-cookies/",
 ]
