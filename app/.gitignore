@@ -1,0 +1,17 @@
+# Gerados pelo `flutter create` (local e no CI)
+android/
+ios/
+web/
+linux/
+macos/
+windows/
+.metadata
+
+# Flutter/Dart
+.dart_tool/
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+pubspec.lock
+*.iml
+.idea/

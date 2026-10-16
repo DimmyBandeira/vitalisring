@@ -1,0 +1,118 @@
+name: App do idoso — APK + Web
+
+on:
+  push:
+    paths: ['app/**', '.github/workflows/app-build.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: write   # publicar o APK em Releases
+  pages: write
+  id-token: write
+
+concurrency:
+  group: app-build-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: app
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      # O repositório versiona só lib/, assets/ e test/. As pastas de plataforma
+      # são geradas aqui; flutter create não sobrescreve arquivos existentes.
+      - name: Gerar plataformas Android e Web
+        run: |
+          flutter --version
+          flutter create . --org br.com.dsaweb --project-name vitalis_ring --platforms android,web
+
+      - name: Ajustar AndroidManifest (nome, internet, HTTP de teste)
+        run: |
+          M=android/app/src/main/AndroidManifest.xml
+          python3 - "$M" <<'PY'
+          import re, sys
+          p = sys.argv[1]; s = open(p).read()
+          s = re.sub(r'android:label="[^"]*"', 'android:label="Vitalis Ring"', s, count=1)
+          if 'android.permission.INTERNET' not in s:
+              s = s.replace('<application', '<uses-permission android:name="android.permission.INTERNET"/>\n    <application', 1)
+          if 'usesCleartextTraffic' not in s:
+              # Somente para testar contra a API local do PC (http://IP:8000). Remover em produção.
+              s = s.replace('<application', '<application android:usesCleartextTraffic="true"', 1)
+          open(p, 'w').write(s)
+          PY
+          grep -n "label\|INTERNET\|Cleartext" "$M"
+
+      - name: Dependências
+        run: flutter pub get
+
+      - name: Ícones do app
+        run: dart run flutter_launcher_icons
+        continue-on-error: true
+
+      - name: Análise estática
+        run: flutter analyze --no-fatal-infos --no-fatal-warnings
+        continue-on-error: true
+
+      - name: Testes
+        run: flutter test
+        continue-on-error: true
+
+      - name: Build APK
+        run: flutter build apk --release
+        # Release assinado com a chave de debug (padrão do template): instala em
+        # qualquer Android para teste. Para a loja, trocar por keystore próprio.
+
+      - name: Build Web
+        run: flutter build web --release --base-href "/${{ github.event.repository.name }}/"
+
+      - name: Renomear APK
+        run: cp build/app/outputs/flutter-apk/app-release.apk "build/vitalis-ring-${{ github.run_number }}.apk"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: vitalis-ring-apk
+          path: app/build/vitalis-ring-${{ github.run_number }}.apk
+
+      - name: Publicar em Releases (link direto para baixar no celular)
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: app-v0.1.${{ github.run_number }}
+          name: App do idoso v0.1.${{ github.run_number }}
+          prerelease: true
+          target_commitish: ${{ github.sha }}
+          files: app/build/vitalis-ring-${{ github.run_number }}.apk
+          body: |
+            Build de teste do app do idoso (branch `${{ github.ref_name }}`).
+            No celular: baixe o .apk abaixo, abra e permita "instalar apps desconhecidos".
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: app/build/web
+
+  pages:
+    # Prévia no navegador do celular, sem instalar. Requer Settings → Pages → Source: GitHub Actions.
+    needs: build
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v4
