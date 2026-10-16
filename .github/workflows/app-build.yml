@@ -23,9 +23,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '17'
@@ -66,15 +66,15 @@ jobs:
         continue-on-error: true
 
       - name: Análise estática
-        run: flutter analyze --no-fatal-infos --no-fatal-warnings
+        run: flutter analyze --no-fatal-infos --no-fatal-warnings 2>&1 | tee ../ci-analyze.log
         continue-on-error: true
 
       - name: Testes
-        run: flutter test
+        run: flutter test 2>&1 | tee ../ci-test.log
         continue-on-error: true
 
       - name: Build APK
-        run: flutter build apk --release
+        run: flutter build apk --release 2>&1 | tee ../ci-build.log
         # Release assinado com a chave de debug (padrão do template): instala em
         # qualquer Android para teste. Para a loja, trocar por keystore próprio.
 
@@ -100,6 +100,25 @@ jobs:
           body: |
             Build de teste do app do idoso (branch `${{ github.ref_name }}`).
             No celular: baixe o .apk abaixo, abra e permita "instalar apps desconhecidos".
+
+      # Os logs do Actions não são acessíveis de fora; publica o essencial como anotações.
+      - name: Relatório de erros (anotações)
+        if: always()
+        working-directory: .
+        run: |
+          python3 - <<'PY'
+          import os, re
+          def emit(title, path, pat):
+              if not os.path.exists(path): return
+              lines = open(path, errors='replace').read().splitlines()
+              keep = [l for l in lines if re.search(pat, l)][:70]
+              if keep:
+                  msg = '%0A'.join(l.replace('%', '%25').replace('\r', '') for l in keep)
+                  print(f'::warning title={title}::{msg}')
+          emit('analyze', 'ci-analyze.log', r'(error|warning) •')
+          emit('test', 'ci-test.log', r'(Expected|Actual|Which|EXCEPTION|══|\.dart:\d+|Error|failed|The following)')
+          emit('build', 'ci-build.log', r'(Error|error:|\.dart:\d+|FAILURE|What went wrong|>|BUILD FAILED|Exception)')
+          PY
 
       - uses: actions/upload-pages-artifact@v3
         with:
