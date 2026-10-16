@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:ui' show FontFeature;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../../core/theme/vr_colors.dart';
 import '../../../domain/ring_snapshot.dart';
@@ -74,20 +76,34 @@ class _LongHold extends StatefulWidget {
 }
 
 class _LongHoldState extends State<_LongHold> {
-  DateTime? _down;
+  Timer? _timer;
+
+  void _cancel() {
+    _timer?.cancel();
+    _timer = null;
+  }
+
+  @override
+  void dispose() {
+    _cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    // Dispara ao completar o tempo segurando, sem precisar soltar.
+    return Listener(
       behavior: HitTestBehavior.opaque,
-      onLongPressStart: (_) => _down = DateTime.now(),
-      onLongPressEnd: (_) {
-        final d = _down;
-        _down = null;
-        if (d != null && DateTime.now().difference(d) + kLongPressTimeout >= widget.duration) {
+      onPointerDown: (_) {
+        _cancel();
+        _timer = Timer(widget.duration, () {
+          _timer = null;
+          HapticFeedback.mediumImpact();
           widget.onFire();
-        }
+        });
       },
+      onPointerUp: (_) => _cancel(),
+      onPointerCancel: (_) => _cancel(),
       child: widget.child,
     );
   }
