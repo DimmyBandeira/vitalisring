@@ -74,7 +74,7 @@ jobs:
         continue-on-error: true
 
       - name: Build APK
-        run: flutter build apk --release 2>&1 | tee ../ci-build.log
+        run: flutter build apk --release --split-per-abi 2>&1 | tee ../ci-build.log
         # Release assinado com a chave de debug (padrão do template): instala em
         # qualquer Android para teste. Para a loja, trocar por keystore próprio.
 
@@ -82,12 +82,16 @@ jobs:
         run: flutter build web --release --base-href "/${{ github.event.repository.name }}/"
 
       - name: Renomear APK
-        run: cp build/app/outputs/flutter-apk/app-release.apk "build/vitalis-ring-${{ github.run_number }}.apk"
+        # arm64 = praticamente todo celular Android de 2017 em diante; armv7 = aparelhos antigos/baratos.
+        run: |
+          cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk "build/vitalis-ring-${{ github.run_number }}-arm64.apk"
+          cp build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk "build/vitalis-ring-${{ github.run_number }}-armv7.apk"
+          ls -la build/*.apk
 
       - uses: actions/upload-artifact@v4
         with:
           name: vitalis-ring-apk
-          path: app/build/vitalis-ring-${{ github.run_number }}.apk
+          path: app/build/vitalis-ring-*.apk
 
       - name: Publicar em Releases (link direto para baixar no celular)
         uses: softprops/action-gh-release@v2
@@ -96,10 +100,10 @@ jobs:
           name: App do idoso v0.1.${{ github.run_number }}
           prerelease: true
           target_commitish: ${{ github.sha }}
-          files: app/build/vitalis-ring-${{ github.run_number }}.apk
+          files: app/build/vitalis-ring-*.apk
           body: |
             Build de teste do app do idoso (branch `${{ github.ref_name }}`).
-            No celular: baixe o .apk abaixo, abra e permita "instalar apps desconhecidos".
+            No celular: baixe o **-arm64.apk** (use o -armv7 só se o celular for bem antigo), abra e permita "instalar apps desconhecidos".
 
       # Os logs do Actions não são acessíveis de fora; publica o essencial como anotações.
       - name: Relatório de erros (anotações)
